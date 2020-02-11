@@ -16,6 +16,6 @@ class threaded:
                 args=args,
                 kwargs=kwargs,
                 daemon=self.kwargs.get('daemon', False)
-            )
+            ).start()
 
         return execute
