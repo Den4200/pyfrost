@@ -2,7 +2,6 @@ from typing import Any, Tuple, Optional
 import pickle
 import socket
 import struct
-from threading import Thread
 from dataclasses import dataclass
 
 from .utils import threaded
