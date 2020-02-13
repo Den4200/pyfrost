@@ -10,7 +10,7 @@ class threaded:
 
     def __call__(self, func: Callable):
         
-        def execute(*args, **kwargs):
+        def execute(*args: Any, **kwargs: Any):
             Thread(
                 target=func,
                 args=args,
