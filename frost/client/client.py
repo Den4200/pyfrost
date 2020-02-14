@@ -4,9 +4,12 @@ from .socketio import BaseClient
 
 class FrostClient(BaseClient):
 
-    def __init__(self, file: str) -> None:
+    def __init__(self) -> None:
         super(FrostClient, self).__init__()
-        path = Path(file)
 
-        self._name = path.name
-        self._dir = path.parent
+    def __enter__(self) -> None:
+        self.connect()
+        return self
+
+    def __exit__(self, type_, value, traceback) -> None:
+        self.close()

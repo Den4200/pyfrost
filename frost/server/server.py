@@ -1,5 +1,6 @@
 from typing import Callable
 from pathlib import Path
+import struct
 
 from .database import db_session
 from .room import Room
@@ -40,12 +41,20 @@ class FrostServer(BaseServer):
 
         return inner
 
+    @threaded()
     def _on_user_connect(self, conn: 'socket.socket', addr):
-        data = self.recieve(conn)
-        username = data['username']
-        password = data['password']
-        
-        print(username, password)
+        while True:
+            try:
+                data = self.recieve(conn)
+            
+            except struct.error:
+                break
+
+            else:
+                username = data['username']
+                password = data['password']
+                
+                print(username, password)
 
     def run(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """
