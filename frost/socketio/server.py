@@ -57,9 +57,6 @@ class Server:
         conn_data_cls.conn, conn_data_cls.addr = self._socket.accept()
 
     def start(self) -> None:
-        """
-        
-        """
         try:
             self._socket.bind((self.ip, self.port))
 
