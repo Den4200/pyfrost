@@ -1,4 +1,4 @@
-from typing import Any, Tuple, Optional
+from typing import Any, Tuple, Optional, Callable
 import pickle
 import socket
 import struct
@@ -26,7 +26,7 @@ class Server:
             socket.AF_INET, 
             socket.SOCK_STREAM
         )
-        self.func = None
+        self.func: Optional[Callable] = None
 
     def send(self, conn: 'socket.socket', data: Any) -> None:
         packets = pickle.dumps(data)
