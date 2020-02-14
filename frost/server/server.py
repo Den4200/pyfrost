@@ -1,19 +1,19 @@
 from typing import Callable
 from pathlib import Path
 
-from .db import db_session
+from .database import db_session
 from .room import Room
 from .user import User
-from .socketio import Server, threaded
+from .socketio import BaseServer, threaded
 
 
-class Frost(Server):
+class FrostServer(BaseServer):
     """
     The Frost server.
     """
 
     def __init__(self, file: str) -> None:
-        super(Frost, self).__init__()
+        super(FrostServer, self).__init__()
         path = Path(file)
 
         self._name = path.name

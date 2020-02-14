@@ -18,7 +18,7 @@ class ConnectionData:
     addr: Optional[Tuple[str, int]] = None
 
 
-class Server:
+class BaseServer:
     """
     A basic sockets server to send and receive
     data from multiple clients.

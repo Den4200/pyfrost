@@ -1,10 +1,10 @@
-from frost import (
-    Frost,
+from frost.server import (
+    FrostServer,
     Room
 )
 
 
-app = Frost(__file__)
+app = FrostServer(__file__)
 
 
 @app.room('/general')
@@ -13,4 +13,5 @@ def general(room: 'Room'):
 
 
 def run():
-    print(general())
+    # print(general())
+    app.run()
