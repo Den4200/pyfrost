@@ -12,6 +12,6 @@ def general(room: 'Room'):
     return room.clients
 
 
-def run():
+def run_server():
     # print(general())
     app.run()
