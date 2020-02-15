@@ -11,5 +11,6 @@ class Method(Enum):
     REGISTER: int = 1
     
     SEND_MSG: int = 2
-
-    NEW_TOKEN: int = 3
+    NEW_MSG: int = 3
+    
+    NEW_TOKEN: int = 4

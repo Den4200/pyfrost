@@ -5,8 +5,8 @@ import struct
 
 from .room import Room
 from .user import User
+from .methods import exec_method
 from .headers import Header, Method
-from .database import db_session
 from .socketio import BaseServer, threaded
 
 
@@ -54,25 +54,37 @@ class FrostServer(BaseServer):
 
             else:
                 headers = data['headers']
-                token = headers.get('auth_token')
+                method = headers[Header.METHOD.value]
 
-                if token is None:
-                    username = data.get('username')
-                    password = data.get('password')
+                resp = exec_method(method, data)
 
-                    if username is not None and password is not None:
-                        # TODO: check username and password against db
-                        # if username and password are correct:
-                        token = secrets.token_urlsafe()
-                        # save token to db
-                        self.send(conn, {
-                            'headers': {
-                                Header.METHOD.value: Method.NEW_TOKEN.value
-                            },
-                            'auth_token': token
-                        })
-                        print(username, password)
-                        print(token)
+                if method == Method.LOGIN.value:
+                    self.send(conn, {
+                        'headers': {
+                            Header.METHOD.value: Method.NEW_TOKEN.value
+                        },
+                        'auth_token': resp
+                    })
+
+                # token = headers.get('auth_token')
+
+                # if token is None:
+                #     username = data.get('username')
+                #     password = data.get('password')
+
+                #     if username is not None and password is not None:
+                #         # TODO: check username and password against db
+                #         # if username and password are correct:
+                #         token = secrets.token_urlsafe()
+                #         # save token to db
+                #         self.send(conn, {
+                #             'headers': {
+                #                 Header.METHOD.value: Method.NEW_TOKEN.value
+                #             },
+                #             'auth_token': token
+                #         })
+                #         print(username, password)
+                #         print(token)
 
     def run(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """

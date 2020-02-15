@@ -14,8 +14,9 @@ class User(Base):
 
     username = Column(String(32), unique=True)
     password = Column(String(128))
+    token = Column(String(43), unique=True)
 
-    def __init__(self, username=None):
+    def __init__(self, username=None, password=None, token=None):
         self.username = username
 
     def __repr__(self) -> str:
