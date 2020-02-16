@@ -7,9 +7,9 @@ def run_client():
     with FrostClient() as client:
         client.send({
             'headers': {
-                Header.METHOD.value: Method.REGISTER.value
+                Header.METHOD.value: Method.LOGIN.value
             },
-            'username': 'user2',
+            'username': 'user1',
             'password': 'password'
         })
         client.recieve()

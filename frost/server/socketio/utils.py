@@ -1,6 +1,8 @@
 from typing import Any, Callable
 from threading import Thread
 
+from ..headers import Header, Method
+
 
 class threaded:
 
@@ -19,3 +21,17 @@ class threaded:
             ).start()
 
         return execute
+
+
+def auth_required(func: Callable):
+
+    def execute(*args: Any, **kwargs:Any) -> None:
+        data = args[0]
+        token = data.get(Header.AUTH_TOKEN.value)
+
+        if token:
+            pass
+
+        # TODO
+
+    return execute

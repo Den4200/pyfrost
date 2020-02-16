@@ -14,10 +14,12 @@ class User(Base):
 
     username = Column(String(32), unique=True)
     password = Column(String(128))
-    token = Column(String(43), unique=True)
+    token = Column(String(64), unique=True)
 
     def __init__(self, username=None, password=None, token=None):
         self.username = username
+        self.password = password
+        self.token = token
 
     def __repr__(self) -> str:
         return f'<User {self.username}>'

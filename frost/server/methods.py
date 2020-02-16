@@ -20,8 +20,10 @@ def _register(data) -> None:
         username=username, 
         password=password,
     )
+
     db_session.add(new_user)
     db_session.commit()
+
 
 def _login(data) -> str:
     username = data['username']
