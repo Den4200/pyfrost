@@ -1,0 +1,19 @@
+{
+  "users": {
+    "1": {
+      "username": "user1",
+      "password": "super-secret-password",
+      "token": null
+    },
+    "2": {
+      "username": "user2",
+      "password": "super-secret-password",
+      "token": null
+    },
+    "3": {
+      "username": "joe",
+      "password": "password",
+      "token": null
+    }
+  }
+}
