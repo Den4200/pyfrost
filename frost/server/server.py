@@ -66,25 +66,13 @@ class FrostServer(BaseServer):
                         'auth_token': resp
                     })
 
-                # token = headers.get('auth_token')
-
-                # if token is None:
-                #     username = data.get('username')
-                #     password = data.get('password')
-
-                #     if username is not None and password is not None:
-                #         # TODO: check username and password against db
-                #         # if username and password are correct:
-                #         token = secrets.token_urlsafe()
-                #         # save token to db
-                #         self.send(conn, {
-                #             'headers': {
-                #                 Header.METHOD.value: Method.NEW_TOKEN.value
-                #             },
-                #             'auth_token': token
-                #         })
-                #         print(username, password)
-                #         print(token)
+                elif method == Method.REGISTER.value:
+                    self.send(conn, {
+                        'headers': {
+                            Header.METHOD.value: Method.NEW_ID.value
+                        },
+                        'id': resp
+                    })
 
     def run(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """

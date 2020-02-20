@@ -30,6 +30,8 @@ class Base:
                 data
             )
 
+        return id_
+
     @classmethod
     def update(cls, item):     
         Base._update(
@@ -61,8 +63,8 @@ class Base:
                                     f'{v.data} already exists in {k}'
                                 )
 
-                            else:
-                                commit_data[k] = v.data
+                        else:
+                            commit_data[k] = v.data
 
                 else:
                     commit_data[k] = v

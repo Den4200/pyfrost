@@ -9,7 +9,8 @@ def run_client():
             'headers': {
                 Header.METHOD.value: Method.LOGIN.value
             },
-            'username': 'user1',
+            'id': '2',
+            'username': 'user2',
             'password': 'password'
         })
         client.recieve()

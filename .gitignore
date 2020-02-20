@@ -131,6 +131,3 @@ proj_init.py
 
 # Databases
 *.db
-
-# Keys
-*.key

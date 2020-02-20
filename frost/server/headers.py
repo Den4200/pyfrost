@@ -14,3 +14,4 @@ class Method(Enum):
     NEW_MSG: int = 3
     
     NEW_TOKEN: int = 4
+    NEW_ID: int = 5

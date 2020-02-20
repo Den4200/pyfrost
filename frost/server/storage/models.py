@@ -1,5 +1,5 @@
 import json
-from base import Base, Unique
+from .base import Base, Unique
 
 
 class User(Base):
@@ -15,9 +15,10 @@ class User(Base):
 class Room(Base):
     __tablename__ = 'rooms'
 
-    def __init__(self, name, owner_id, id_=None):
-        self.name = name
+    def __init__(self, name, owner_id, id_=None, members=[]):
+        self.name = Unique(name)
         self.owner_id = owner_id
+        self.members = members
         self.id = id_
 
 
@@ -29,13 +30,3 @@ class Message(Base):
         self.from_user = from_user
         self.room_id = room_id
         self.id = id_
-
-
-# data = Base.data()
-# print(data)
-
-# user = User('koolaid', 'p43sorcds2shwooop43', 8)
-# User.update(user)
-
-# data = Base.data()
-# print(data)

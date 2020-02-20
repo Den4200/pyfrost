@@ -1,47 +1,17 @@
 {
   "users": {
     "meta": {
-      "last_id": "8"
+      "last_id": "2"
     },
     "1": {
       "username": "user1",
-      "password": "super-secret-password",
-      "token": null
+      "password": "pbkdf2:sha256:150000$AA8ObAeo$82869f9d67637eb8363735478c4311b1ed0e2283d3da5536329ba9baddcd31e7",
+      "token": "wPncO2YaouEfhb8lrIAzEDSWo_7KI8sS6a_vKi5FyhQ"
     },
     "2": {
       "username": "user2",
-      "password": "super-secret-password",
-      "token": null
-    },
-    "3": {
-      "username": "joe",
-      "password": "passwordcool",
-      "token": null
-    },
-    "4": {
-      "username": "bob",
-      "password": "p43sorcds243ool",
-      "token": null
-    },
-    "5": {
-      "username": "bosss",
-      "password": "p43sorcds2shwooop43ool",
-      "token": null
-    },
-    "6": {
-      "username": "bobert",
-      "password": "p43sorcds2shwooop43ool",
-      "token": null
-    },
-    "7": {
-      "username": "robert",
-      "password": "p43sorcds2shwooop43ool",
-      "token": null
-    },
-    "8": {
-      "username": "koolaid",
-      "password": "p43sorcds2shwooop43",
-      "token": null
+      "password": "pbkdf2:sha256:150000$TuDoVjwh$79a9eab9a295ca68f87a2920216b61a8c98954f87091006cfe139047f2bb9ffd",
+      "token": "qMkor73ziaDIdmzbjbjEm1UgYsA-IQwODh0pLyqjQek"
     }
   },
   "rooms": {

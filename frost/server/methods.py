@@ -7,7 +7,7 @@ from werkzeug.security import (
 )
 
 from .headers import Header, Method
-from .database import db_session, User
+from .storage import Base, User
 
 
 def _register(data) -> None:
@@ -16,26 +16,36 @@ def _register(data) -> None:
         data['password']
     )
 
-    new_user = User(
-        username=username, 
-        password=password,
+    id_ = User.add(
+        User(
+            username=username, 
+            password=password
+        )
     )
 
-    db_session.add(new_user)
-    db_session.commit()
+    return id_
 
 
 def _login(data) -> str:
+    id_ = data['id']
     username = data['username']
     password = data['password']
-    user = User.query.filter_by(username=username).first()
 
-    if user and check_password_hash(user.password, password):
+    contents = Base.data()
+    user = User.search(id_)
+
+    if (user is not None and 
+        user['username'] == username and 
+        check_password_hash(user['password'], password)
+    ):
         token = secrets.token_urlsafe()
+        contents['users'][id_]['token'] = token
+
+        Base.commit(contents)
         return token
 
 
-METHODS: Dict[Union[Header, Method], Callable] = {
+METHODS: Dict[int, Callable] = {
     Method.REGISTER.value: _register,
     Method.LOGIN.value: _login
 }
