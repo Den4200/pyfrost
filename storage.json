@@ -43,5 +43,15 @@
       "password": "p43sorcds2shwooop43",
       "token": null
     }
+  },
+  "rooms": {
+    "meta": {
+      "last_id": "0"
+    }
+  },
+  "messages": {
+    "meta": {
+      "last_id": "0"
+    }
   }
 }
