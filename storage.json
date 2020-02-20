@@ -12,7 +12,17 @@
     },
     "3": {
       "username": "joe",
-      "password": "password",
+      "password": "passwordcool",
+      "token": null
+    },
+    "4": {
+      "username": "bob",
+      "password": "p43sorcds243ool",
+      "token": null
+    },
+    "5": {
+      "username": "boss",
+      "password": "p43sorcds2shwooop43ool",
       "token": null
     }
   }
