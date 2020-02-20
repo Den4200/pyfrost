@@ -1,5 +1,8 @@
 {
   "users": {
+    "meta": {
+      "last_id": "8"
+    },
     "1": {
       "username": "user1",
       "password": "super-secret-password",
@@ -21,8 +24,23 @@
       "token": null
     },
     "5": {
-      "username": "boss",
+      "username": "bosss",
       "password": "p43sorcds2shwooop43ool",
+      "token": null
+    },
+    "6": {
+      "username": "bobert",
+      "password": "p43sorcds2shwooop43ool",
+      "token": null
+    },
+    "7": {
+      "username": "robert",
+      "password": "p43sorcds2shwooop43ool",
+      "token": null
+    },
+    "8": {
+      "username": "koolaid",
+      "password": "p43sorcds2shwooop43",
       "token": null
     }
   }

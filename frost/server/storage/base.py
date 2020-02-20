@@ -16,9 +16,11 @@ class Base:
         table_name = Base._get_table_name(cls)
         data = item.__dict__
 
-        if str(data['id']) in contents[table_name]:
+        id_ = Base._get_id(contents, table_name, data)
+
+        if str(id_) in contents[table_name]:
             raise KeyError(
-                f'ID {data["id"]} already exists in "{table_name}" table'
+                f'ID {id_} already exists in "{table_name}" table'
             )
 
         else:
@@ -38,34 +40,46 @@ class Base:
 
     @staticmethod
     def _update(contents, table_name, data):
-        id_ = str(data['id'])
-        other = {
-            k: v for k, v in data.items() if k != 'id'
-        }
+        id_ = str(Base._get_id(contents, table_name, data))
         commit_data = dict()
 
         commit = True
-        for k, v in other.items():
+        for k, v in data.items():
 
-            if isinstance(v, Unique):
+            if k != 'id':
 
-                for val in contents[table_name].values():
+                if isinstance(v, Unique):
+                    items = contents[table_name].items()
 
-                    if val[k] == str(v.data):
-                        commit = False
-                        raise KeyError(
-                            f'{v.data} already exists in {k}'
-                        )
+                    for key, val in items:
 
-                    else:
-                        commit_data[k] = v.data
+                        if key != 'meta':
 
-            else:
-                commit_data[k] = v
+                            if val[k] == str(v.data) and key != id_:
+                                commit = False
+                                raise KeyError(
+                                    f'{v.data} already exists in {k}'
+                                )
+
+                            else:
+                                commit_data[k] = v.data
+
+                else:
+                    commit_data[k] = v
         
         if commit:
             contents[table_name][id_] = commit_data
+            contents[table_name]['meta']['last_id'] = str(len(
+                contents[table_name]
+            ) - 1)
+
             Base.commit(contents)
+
+    @staticmethod
+    def _get_id(contents, table_name, data):
+        if data.get('id') is None:
+            return int(contents[table_name]['meta']['last_id']) + 1
+        return data['id']
 
     @staticmethod
     def _get_table_name(cls):

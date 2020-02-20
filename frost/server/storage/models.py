@@ -5,18 +5,18 @@ from base import Base, Unique
 class User(Base):
     __tablename__ = 'users'
 
-    def __init__(self, id_, username, password, token=None):
+    def __init__(self, username, password, id_=None, token=None):
         self.id = id_
         self.username = Unique(username)
         self.password = password
         self.token = token
 
 
-# data = Base.data()
-# print(data)
+data = Base.data()
+print(data)
 
-# user = User(5, 'boss', 'p43sorcds2shwooop43ool')
-# User.add(user)
+user = User('koolaid', 'p43sorcds2shwooop43', 8)
+User.update(user)
 
-# data = Base.data()
-# print(data)
+data = Base.data()
+print(data)
