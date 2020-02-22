@@ -41,6 +41,15 @@ class FrostClient(BaseClient):
         _store_id({'id': id_})
         self.recieve()
 
+    def register(self, username, password) -> None:
+        self.send({
+            'headers': {
+                Header.METHOD.value: Method.REGISTER.value
+            },
+            'username': username,
+            'password': password
+        })
+
     @auth_required
     def send_msg(self, msg, token=None, id_=None) -> None:
         self.send({
