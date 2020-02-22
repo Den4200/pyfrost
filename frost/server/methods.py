@@ -8,6 +8,7 @@ from werkzeug.security import (
 
 from .headers import Header, Method
 from .storage import Base, User
+from .auth import auth_required
 
 
 def _register(data) -> None:
@@ -44,10 +45,20 @@ def _login(data) -> str:
         Base.commit(contents)
         return token
 
+@auth_required
+def _send_msg(data, token=None, id_=None) -> None:
+    msg = data['msg']
+    user = User.search(id_)
+
+    if user['token'] == token:
+        print(f'{user["username"]}: {msg}')
+
+    return id_, msg
 
 METHODS: Dict[int, Callable] = {
     Method.REGISTER.value: _register,
-    Method.LOGIN.value: _login
+    Method.LOGIN.value: _login,
+    Method.SEND_MSG.value: _send_msg
 }
 
 

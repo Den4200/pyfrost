@@ -4,6 +4,7 @@ from enum import Enum
 class Header(Enum):
     METHOD: int = 0
     AUTH_TOKEN: int = 1
+    ID_TOKEN: int = 2
 
 
 class Method(Enum):
