@@ -49,10 +49,8 @@ def _login(data) -> str:
 def _send_msg(data, token=None, id_=None) -> None:
     msg = data['msg']
     user = User.search(id_)
-
-    if user['token'] == token:
-        print(f'{user["username"]}: {msg}')
-
+    
+    print(f'{user["username"]}: {msg}')
     return id_, msg
 
 METHODS: Dict[int, Callable] = {
