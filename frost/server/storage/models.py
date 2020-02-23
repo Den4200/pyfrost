@@ -25,8 +25,8 @@ class Room(Base):
 class Message(Base):
     __tablename__ = 'messages'
 
-    def __init__(self, message, from_user, room_id, id_=None):
+    def __init__(self, message, timestamp, from_user, id_=None):
         self.message = message
         self.from_user = from_user
-        self.room_id = room_id
+        self.timestamp = timestamp
         self.id = id_

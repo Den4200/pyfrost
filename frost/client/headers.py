@@ -13,6 +13,8 @@ class Method(Enum):
     
     SEND_MSG: int = 2
     NEW_MSG: int = 3
+    GET_ALL_MSG: int = 4
+    ALL_MSG: int = 5
     
-    NEW_TOKEN: int = 4
-    NEW_ID: int = 5
+    NEW_TOKEN: int = 6
+    NEW_ID: int = 7

@@ -60,3 +60,14 @@ class FrostClient(BaseClient):
             },
             'msg': msg
         })
+
+    @auth_required
+    def get_all_msgs(self, token=None, id_=None) -> None:
+        self.send({
+            'headers': {
+                Header.METHOD.value: Method.GET_ALL_MSG.value,
+                Header.AUTH_TOKEN.value: token,
+                Header.ID_TOKEN.value: id_
+            }
+        })
+        self.recieve()

@@ -1,8 +1,8 @@
+import sys
 from sys import argv
 
 
-if __name__ == "__main__":
-    # init_db()
+def main():
     if len(argv) == 2:
 
         if argv[1] == 'server':
@@ -22,3 +22,11 @@ if __name__ == "__main__":
 
     else:    
         print('Usage: python -m tests <server / client / init_db>')
+
+
+if __name__ == "__main__":
+    try:
+        main()
+
+    finally:
+        sys.stderr.close()

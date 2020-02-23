@@ -112,6 +112,10 @@ class Base:
         with open('storage.json') as f:
             return json.load(f)
 
+    @classmethod
+    def entries(cls):
+        return Base._get_table(cls)
+
 
 class Unique:
 

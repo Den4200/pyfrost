@@ -1,4 +1,5 @@
 from typing import Any, Callable, Dict, Union
+from datetime import datetime
 import secrets
 
 from werkzeug.security import (
@@ -7,11 +8,11 @@ from werkzeug.security import (
 )
 
 from .headers import Header, Method
-from .storage import Base, User
+from .storage import Base, User, Message
 from .auth import auth_required
 
 
-def _register(data) -> None:
+def _register(data) -> str:
     username = data['username']
     password = generate_password_hash(
         data['password']
@@ -46,17 +47,48 @@ def _login(data) -> str:
         return token
 
 @auth_required
-def _send_msg(data, token=None, id_=None) -> None:
+def _send_msg(data, token=None, id_=None):
     msg = data['msg']
     user = User.search(id_)
+    username = user['username']
+    timestamp = str(datetime.now())
+
+    Message.add(
+        Message(msg, timestamp, {
+            'username': username,
+            'id': id_
+        })
+    )
+
+    print(f'{username}: {msg}')
+    return {
+        'from_user': {
+            'username': username,
+            'id': id_
+        },
+        'msg': msg,
+        'timestamp': timestamp
+    }
+
+@auth_required
+def _get_all_msgs(data, max_=50 ,token=None, id_=None):
+    msgs = Message.entries()
+    result = dict()
+
+    for idx, id_ in enumerate(msgs):
+        if idx >= max_:
+            break
+
+        result[id_] = msgs[id_]
+
+    return result
     
-    print(f'{user["username"]}: {msg}')
-    return id_, msg
 
 METHODS: Dict[int, Callable] = {
     Method.REGISTER.value: _register,
     Method.LOGIN.value: _login,
-    Method.SEND_MSG.value: _send_msg
+    Method.SEND_MSG.value: _send_msg,
+    Method.GET_ALL_MSG.value: _get_all_msgs
 }
 
 

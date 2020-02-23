@@ -26,9 +26,14 @@ def _store_id(data):
     return _store_data('id', data)
 
 
+def _all_msgs(data):
+    return data['msgs']
+
+
 METHODS: Dict[Union[Header, Method], Callable] = {
     Method.NEW_TOKEN.value: _store_token,
-    Method.NEW_ID.value: _store_id
+    Method.NEW_ID.value: _store_id,
+    Method.ALL_MSG.value: _all_msgs
 }
 
 

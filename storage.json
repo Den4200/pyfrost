@@ -21,7 +21,23 @@
   },
   "messages": {
     "meta": {
-      "last_id": "0"
+      "last_id": "2"
+    },
+    "1": {
+      "message": "hello, world!",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-22 20:23:50.698802"
+    },
+    "2": {
+      "message": "testing testing 123",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-22 20:23:52.503807"
     }
   }
 }

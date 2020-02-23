@@ -22,10 +22,6 @@ class FrostServer(BaseServer):
         self._name = path.name
         self._dir = path.parent
 
-        self.config = {
-            'AFK_TIMEOUT': 900,
-        }
-
         self._rooms = list()
 
         self.func = self._on_user_connect
@@ -72,6 +68,14 @@ class FrostServer(BaseServer):
                             Header.METHOD.value: Method.NEW_ID.value
                         },
                         'id': resp
+                    })
+
+                elif method == Method.GET_ALL_MSG.value:
+                    self.send(conn, {
+                        'headers': {
+                            Header.METHOD.value: Method.ALL_MSG.value
+                        },
+                        'msgs': resp
                     })
 
     def run(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
