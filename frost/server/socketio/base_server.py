@@ -4,6 +4,7 @@ from typing import (
     Optional, 
     Callable
 )
+import logging
 import pickle
 import socket
 import struct
@@ -69,9 +70,8 @@ class BaseServer:
             print(e)
 
         else:
-            print('Server sucessfully initialized')
             self._socket.listen()
-            print('Server awaiting new connections')
+            logging.info('Server is online!')
 
             run = True
             while run:
@@ -87,7 +87,7 @@ class BaseServer:
                         break
 
                 conn, addr = conn_data.conn, conn_data.addr
-                print(f'Connection established to {addr}')
+                logging.info(f'Connection established to {addr}')
 
                 if self.func is not None:
                     self.func(conn, addr)

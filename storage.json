@@ -6,12 +6,12 @@
     "1": {
       "username": "user1",
       "password": "pbkdf2:sha256:150000$AA8ObAeo$82869f9d67637eb8363735478c4311b1ed0e2283d3da5536329ba9baddcd31e7",
-      "token": "inXGTTx_lp4VfmnHVrdspgH_VGMlwiN7AkWwKV_NpNg"
+      "token": "qm0_oGk3Uh3xYUoGqPZBUH49BjBalWdC7twM7HWs4fo"
     },
     "2": {
       "username": "user2",
       "password": "pbkdf2:sha256:150000$TuDoVjwh$79a9eab9a295ca68f87a2920216b61a8c98954f87091006cfe139047f2bb9ffd",
-      "token": "pGuEx255vnyATUNn8tg0OzfbaMQOhIIl1AQGEy9Qgpo"
+      "token": "ln7OVLnRzfhaTv0KKwtcnWWby81nDaJspcHeYbLES7w"
     }
   },
   "rooms": {
@@ -21,7 +21,7 @@
   },
   "messages": {
     "meta": {
-      "last_id": "2"
+      "last_id": "5"
     },
     "1": {
       "message": "hello, world!",
@@ -38,6 +38,30 @@
         "id": "1"
       },
       "timestamp": "2020-02-22 20:23:52.503807"
+    },
+    "3": {
+      "message": "how are ya?",
+      "from_user": {
+        "username": "user2",
+        "id": "2"
+      },
+      "timestamp": "2020-02-24 15:08:41.881558"
+    },
+    "4": {
+      "message": "you good?",
+      "from_user": {
+        "username": "user2",
+        "id": "2"
+      },
+      "timestamp": "2020-02-24 15:08:43.854781"
+    },
+    "5": {
+      "message": "testing 123",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-24 15:52:50.383261"
     }
   }
 }
