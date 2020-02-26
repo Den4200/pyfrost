@@ -5,10 +5,7 @@ class Base:
 
     @classmethod
     def search(cls, item):
-        contents = Base.data()
-        table = Base._get_table(cls)
-
-        return table.get(item)
+        return Base._get_table(cls).get(item)
 
     @classmethod
     def add(cls, item):
@@ -33,7 +30,7 @@ class Base:
         return id_
 
     @classmethod
-    def update(cls, item):     
+    def update(cls, item):
         Base._update(
             Base.data(),
             Base._get_table_name(cls),
@@ -68,7 +65,7 @@ class Base:
 
                 else:
                     commit_data[k] = v
-        
+
         if commit:
             contents[table_name][id_] = commit_data
             contents[table_name]['meta']['last_id'] = str(len(
@@ -99,8 +96,8 @@ class Base:
 
         if table is not None:
             return table
-            
-        raise ValueError('Table does not exist.')        
+
+        raise ValueError('Table does not exist.')
 
     @staticmethod
     def commit(data):

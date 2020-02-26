@@ -1,7 +1,7 @@
 from typing import Any, Callable
 from threading import Thread
 
-from ..headers import Header, Method
+from ..headers import Method
 
 
 class threaded:
@@ -11,7 +11,7 @@ class threaded:
         self.kwargs = kwargs
 
     def __call__(self, func: Callable):
-        
+
         def execute(*args: Any, **kwargs: Any):
             Thread(
                 target=func,
@@ -25,7 +25,7 @@ class threaded:
 
 def auth_required(func: Callable):
 
-    def execute(*args: Any, **kwargs:Any) -> None:
+    def execute(*args: Any, **kwargs: Any) -> None:
         data = args[0]
         token = data.get(Header.AUTH_TOKEN.value)
 

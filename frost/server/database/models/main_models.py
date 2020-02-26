@@ -31,7 +31,7 @@ class Room(Base):
 
     name = Column(String(64))
     owner = Column(Integer, ForeignKey('users.id'))
-  
+
 
 class Message(Base):
     __tablename__ = 'messages'

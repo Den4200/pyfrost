@@ -11,7 +11,7 @@ class BaseClient:
         self.ip = ip
         self.port = port
         self._socket = socket.socket(
-            socket.AF_INET, 
+            socket.AF_INET,
             socket.SOCK_STREAM
         )
 

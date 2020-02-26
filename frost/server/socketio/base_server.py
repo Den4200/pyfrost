@@ -1,7 +1,7 @@
 from typing import (
-    Any, 
-    Tuple, 
-    Optional, 
+    Any,
+    Tuple,
+    Optional,
     Callable
 )
 import logging
@@ -29,7 +29,7 @@ class BaseServer:
         self.ip = ip
         self.port = port
         self._socket = socket.socket(
-            socket.AF_INET, 
+            socket.AF_INET,
             socket.SOCK_STREAM
         )
         self.func: Optional[Callable] = None
@@ -77,7 +77,7 @@ class BaseServer:
             while run:
                 conn_data = ConnectionData()
                 self._accept_conn(conn_data)
-                
+
                 # Makes the server stoppable
                 while conn_data.conn is None or conn_data.addr is None:
                     try:

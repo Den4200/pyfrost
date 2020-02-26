@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Union
+from typing import Any, Callable, Dict
 from datetime import datetime
 import secrets
 import logging
@@ -8,7 +8,7 @@ from werkzeug.security import (
     check_password_hash
 )
 
-from .headers import Header, Method
+from .headers import Method
 from .storage import Base, User, Message
 from .auth import auth_required
 
@@ -21,7 +21,7 @@ def _register(data) -> str:
 
     id_ = User.add(
         User(
-            username=username, 
+            username=username,
             password=password
         )
     )
@@ -38,10 +38,10 @@ def _login(data) -> str:
     contents = Base.data()
     user = User.search(id_)
 
-    if (user is not None and 
-        user['username'] == username and 
+    if (user is not None and
+        user['username'] == username and
         check_password_hash(user['password'], password)
-    ):
+        ):
         token = secrets.token_urlsafe()
         contents['users'][id_]['token'] = token
 
@@ -49,6 +49,7 @@ def _login(data) -> str:
 
         Base.commit(contents)
         return token
+
 
 @auth_required
 def _send_msg(data, token=None, id_=None):
@@ -74,8 +75,9 @@ def _send_msg(data, token=None, id_=None):
         'timestamp': timestamp
     }
 
+
 @auth_required
-def _get_all_msgs(data, max_=50 ,token=None, id_=None):
+def _get_all_msgs(data, max_=50, token=None, id_=None):
     msgs = Message.entries()
     result = dict()
 

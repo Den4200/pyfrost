@@ -1,11 +1,9 @@
 from typing import Callable
 from pathlib import Path
-import secrets
 import struct
 import socket
 
 from .room import Room
-from .user import User
 from .methods import exec_method
 from .headers import Header, Method
 from .socketio import BaseServer, threaded
@@ -45,7 +43,7 @@ class FrostServer(BaseServer):
         while True:
             try:
                 data = self.recieve(conn)
-            
+
             except struct.error:
                 break
 
@@ -85,5 +83,5 @@ class FrostServer(BaseServer):
         """
         self.ip = ip
         self.port = port
-        
+
         self.start()

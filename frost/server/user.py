@@ -33,7 +33,7 @@ class User:
 
             if self.afk_timeout >= 900:
                 self.status = Status.AFK
-                
+
             elif self.status:
                 self.status = Status.ONLINE
 

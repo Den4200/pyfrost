@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from .headers import Header, Method
 from .methods import (
     exec_method,

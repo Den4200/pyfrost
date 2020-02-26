@@ -20,7 +20,7 @@ def main():
         else:
             print('Usage: python -m tests <server / client / init_db>')
 
-    else:    
+    else:
         print('Usage: python -m tests <server / client / init_db>')
 
 

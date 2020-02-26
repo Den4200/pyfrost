@@ -6,11 +6,11 @@ from .auth import auth_required
 from . import logger
 
 __all__ = (
-    'FrostServer', 
-    'Room', 
-    'User', 
-    'Status', 
-    'Header', 
-    'Method', 
+    'FrostServer',
+    'Room',
+    'User',
+    'Status',
+    'Header',
+    'Method',
     'auth_required'
 )

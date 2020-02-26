@@ -7,6 +7,7 @@ def get_auth_token():
     with open('.frost', 'r') as f:
         return json.load(f)['auth_token']
 
+
 @functools.lru_cache()
 def get_id():
     with open('.frost', 'r') as f:
@@ -20,7 +21,7 @@ def auth_required(func):
     """
     def execute(*args, **kwargs):
         return func(
-            *args, **kwargs, 
+            *args, **kwargs,
             token=get_auth_token(),
             id_=get_id()
         )

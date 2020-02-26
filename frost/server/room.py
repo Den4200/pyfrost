@@ -1,6 +1,3 @@
-import socket
-from typing import Dict, Tuple, Union
-
 from .exceptions import MaxRoomSize
 
 

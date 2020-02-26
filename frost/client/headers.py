@@ -10,11 +10,11 @@ class Header(Enum):
 class Method(Enum):
     LOGIN: int = 0
     REGISTER: int = 1
-    
+
     SEND_MSG: int = 2
     NEW_MSG: int = 3
     GET_ALL_MSG: int = 4
     ALL_MSG: int = 5
-    
+
     NEW_TOKEN: int = 6
     NEW_ID: int = 7
