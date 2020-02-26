@@ -40,8 +40,8 @@ def _login(data) -> str:
 
     if (user is not None and
         user['username'] == username and
-        check_password_hash(user['password'], password)
-        ):
+        check_password_hash(user['password'], password)):
+
         token = secrets.token_urlsafe()
         contents['users'][id_]['token'] = token
 
@@ -89,7 +89,7 @@ def _get_all_msgs(data, max_=50, token=None, id_=None):
 
     logging.info(f'User ID: {id_} requested all {msg_id} messages')
     return result
-    
+
 
 METHODS: Dict[int, Callable] = {
     Method.REGISTER.value: _register,

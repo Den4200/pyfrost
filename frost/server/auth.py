@@ -1,7 +1,9 @@
 from .headers import Header
 from .storage import User
 
+
 def auth_required(func):
+
     def execute(*args, **kwargs):
         id_ = args[0]['headers'].get(Header.ID_TOKEN.value)
         token = args[0]['headers'].get(Header.AUTH_TOKEN.value)

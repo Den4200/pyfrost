@@ -1,7 +1,7 @@
 from typing import Any, Callable
 from threading import Thread
 
-from ..headers import Header, Method
+from ..headers import Header
 
 
 class threaded:
