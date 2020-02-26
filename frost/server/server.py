@@ -2,6 +2,7 @@ from typing import Callable
 from pathlib import Path
 import secrets
 import struct
+import socket
 
 from .room import Room
 from .user import User
