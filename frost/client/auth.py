@@ -14,7 +14,7 @@ def get_id():
         return json.load(f)['id']
 
 
-def auth_required(func):
+def get_auth(func):
     """
     A decorator to get the saved
     auth token and id.

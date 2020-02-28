@@ -4,7 +4,7 @@ from .methods import (
     _store_id
 )
 from .socketio import BaseClient
-from .auth import auth_required
+from .auth import get_auth
 
 
 class FrostClient(BaseClient):
@@ -48,7 +48,7 @@ class FrostClient(BaseClient):
             'password': password
         })
 
-    @auth_required
+    @get_auth
     def send_msg(self, msg, token=None, id_=None) -> None:
         self.send({
             'headers': {
@@ -59,7 +59,7 @@ class FrostClient(BaseClient):
             'msg': msg
         })
 
-    @auth_required
+    @get_auth
     def get_all_msgs(self, token=None, id_=None) -> None:
         self.send({
             'headers': {
