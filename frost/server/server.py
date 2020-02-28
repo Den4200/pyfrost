@@ -68,7 +68,7 @@ class FrostServer(BaseServer):
                         },
                         'id': resp
                     })
-
+                    
                 elif method == Method.GET_ALL_MSG.value:
                     self.send(conn, {
                         'headers': {
@@ -76,6 +76,15 @@ class FrostServer(BaseServer):
                         },
                         'msgs': resp
                     })
+
+                elif method == Method.GET_NEW_MSG.value:
+                    self.send(conn, {
+                        'headers': {
+                            Header.METHOD.value: Method.NEW_MSG.value
+                        },
+                        'msgs': resp
+                    })
+
 
     def run(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """

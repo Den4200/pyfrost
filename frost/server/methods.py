@@ -76,26 +76,64 @@ def _send_msg(data, token=None, id_=None):
     }
 
 
+def _sort_msgs(msgs):
+    sorted_ids = sorted([
+        id_ for id_ in msgs if id_ != 'meta'
+    ], key=lambda id_: int(id_))
+    return { id_: msgs[id_] for id_ in sorted_ids }
+
+
 @auth_required
 def _get_all_msgs(data, max_=50, token=None, id_=None):
     msgs = Message.entries()
+    rev_entries = reversed(list(msgs))
     result = dict()
 
-    for idx, msg_id in enumerate(msgs):
-        if idx >= max_:
-            break
-
+    for idx, msg_id in enumerate(rev_entries, 1):
         result[msg_id] = msgs[msg_id]
 
-    logging.info(f'User ID: {id_} requested all {msg_id} messages')
-    return result
+        if msg_id != 'meta' and idx >= max_:
+            break
+
+    logging.info(f'User ID: {id_} requested {len(result)} messages')
+    return _sort_msgs(result)
+
+
+@auth_required
+def _get_new_msgs(data, token=None, id_=None):
+    last_ts = data.get('last_msg_timestamp')
+
+    if last_ts is None:
+        return _get_all_msgs(data)
+
+    msgs = Message.entries()
+    rev_entries = reversed(list(msgs.items()))
+
+    last_ts = datetime.strptime(last_ts, r'%Y-%m-%d %H:%M:%S.%f')
+    results = dict()
+
+    for msg_id, msg in rev_entries:
+        msg_ts = datetime.strptime(
+            msg['timestamp'],
+            r'%Y-%m-%d %H:%M:%S.%f'
+        )
+
+        if msg_ts > last_ts:
+            results[msg_id] = msg
+        else:
+            break
+    
+    if len(results) > 0:
+        logging.info(f'User ID: {id_} requested {len(results)} messages')
+        return _sort_msgs(results)
 
 
 METHODS: Dict[int, Callable] = {
     Method.REGISTER.value: _register,
     Method.LOGIN.value: _login,
     Method.SEND_MSG.value: _send_msg,
-    Method.GET_ALL_MSG.value: _get_all_msgs
+    Method.GET_ALL_MSG.value: _get_all_msgs,
+    Method.GET_NEW_MSG.value: _get_new_msgs
 }
 
 

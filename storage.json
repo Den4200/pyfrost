@@ -6,7 +6,7 @@
     "1": {
       "username": "user1",
       "password": "pbkdf2:sha256:150000$AA8ObAeo$82869f9d67637eb8363735478c4311b1ed0e2283d3da5536329ba9baddcd31e7",
-      "token": "YZewfTtNEwioKET--vjJHMq2iUlu8__P51wty7VGqyk"
+      "token": "VlTpcFpuYDXrFjsdUsiaMizN5lUOC9j0pzQSgVqe2RM"
     },
     "2": {
       "username": "user2",
@@ -21,7 +21,7 @@
   },
   "messages": {
     "meta": {
-      "last_id": "5"
+      "last_id": "13"
     },
     "1": {
       "message": "hello, world!",
@@ -62,6 +62,70 @@
         "id": "1"
       },
       "timestamp": "2020-02-24 15:52:50.383261"
+    },
+    "6": {
+      "message": "hello!",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:48:59.441515"
+    },
+    "7": {
+      "message": "hi!",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:51:10.327795"
+    },
+    "8": {
+      "message": "testing testing\\",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:51:51.258675"
+    },
+    "9": {
+      "message": "tests",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:52:24.855115"
+    },
+    "10": {
+      "message": "heyyyyyy",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:52:34.769644"
+    },
+    "11": {
+      "message": "new message??",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:52:47.980136"
+    },
+    "12": {
+      "message": "new",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:53:06.640865"
+    },
+    "13": {
+      "message": "hey! im new here",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-28 16:56:00.165579"
     }
   }
 }

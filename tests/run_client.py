@@ -1,12 +1,49 @@
+from dataclasses import dataclass
+
 from frost import FrostClient
+from frost.client.socketio import threaded
+
+@dataclass
+class Messages:
+    contents = dict()
+
+
+messages = Messages()
+
+
+@threaded(daemon=True)
+def listen(client: 'FrostClient') -> None:
+    while True:
+        msgs = client.get_new_msgs()
+
+        if msgs:
+            for msg_id, msg in msgs.items():
+                messages.contents[msg_id] = msg
+
+            print(messages.contents)
+
+
+@threaded()
+def send_msg(client: 'FrostClient'):
+    while True:
+        msg = input('> ')
+        client.send_msg(msg)
 
 
 def run_client():
-    with FrostClient() as client:
-        # client.login('1', 'user1', 'password')
+    # with FrostClient() as client:
+    client = FrostClient()
+    client.connect()
 
-        # client.send_msg('testing 123')
-        # time.sleep(2)
-        # client.send_msg('you good?')
+    client.login(
+        input('ID: '),
+        input('Username: '),
+        input('Password: ')
+    )
+    msgs = client.get_all_msgs()
+    print(msgs)
 
-        client.get_all_msgs()
+    listen(client)
+    send_msg(client)
+
+    # client.close()

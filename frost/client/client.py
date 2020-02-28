@@ -1,3 +1,6 @@
+from typing import Any
+import json
+
 from .headers import Header, Method
 from .methods import (
     exec_method,
@@ -19,13 +22,13 @@ class FrostClient(BaseClient):
     def __exit__(self, type_, value, traceback) -> None:
         self.close()
 
-    def recieve(self) -> None:
+    def recieve(self) -> Any:
         data = super(FrostClient, self).recieve()
         headers = data['headers']
         method = headers[Header.METHOD.value]
 
         resp = exec_method(method, data)
-        print(resp)
+        return resp
 
     def login(self, id_, username, password) -> None:
         self.send({
@@ -60,7 +63,7 @@ class FrostClient(BaseClient):
         })
 
     @get_auth
-    def get_all_msgs(self, token=None, id_=None) -> None:
+    def get_all_msgs(self, token=None, id_=None) -> Any:
         self.send({
             'headers': {
                 Header.METHOD.value: Method.GET_ALL_MSG.value,
@@ -68,4 +71,20 @@ class FrostClient(BaseClient):
                 Header.ID_TOKEN.value: id_
             }
         })
-        self.recieve()
+        return self.recieve()
+
+    @get_auth
+    def get_new_msgs(self, token=None, id_=None):
+        with open('.frost', 'r') as f:
+            last = json.load(f).get('last_msg_timestamp')
+
+        self.send({
+            'headers': {
+                Header.METHOD.value: Method.GET_NEW_MSG.value,
+                Header.AUTH_TOKEN.value: token,
+                Header.ID_TOKEN.value: id_
+            },
+            'last_msg_timestamp': last
+        })
+        
+        return self.recieve()

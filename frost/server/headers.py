@@ -12,9 +12,12 @@ class Method(Enum):
     REGISTER: int = 1
 
     SEND_MSG: int = 2
-    NEW_MSG: int = 3
-    GET_ALL_MSG: int = 4
-    ALL_MSG: int = 5
 
-    NEW_TOKEN: int = 6
-    NEW_ID: int = 7
+    NEW_MSG: int = 3
+    GET_NEW_MSG: int = 4
+
+    ALL_MSG: int = 5
+    GET_ALL_MSG: int = 6
+    
+    NEW_TOKEN: int = 7
+    NEW_ID: int = 8
