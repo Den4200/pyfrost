@@ -19,7 +19,10 @@ def _store_data(name, data):
 
 
 def _store_token(data):
-    return _store_data('auth_token', data)
+    return (
+        _store_data('auth_token', data),
+        _store_id(data)
+    )
 
 
 def _store_id(data):

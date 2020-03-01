@@ -37,7 +37,6 @@ def run_client():
     client.connect()
 
     client.login(
-        input('ID: '),
         input('Username: '),
         input('Password: ')
     )

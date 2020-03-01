@@ -6,12 +6,12 @@
     "1": {
       "username": "user1",
       "password": "pbkdf2:sha256:150000$AA8ObAeo$82869f9d67637eb8363735478c4311b1ed0e2283d3da5536329ba9baddcd31e7",
-      "token": "1yRsgPhmos9oPDGvSDVfYS11yfzUmaQQLHg4Jm3tfzU"
+      "token": "hwS4EUk5XdkOyBij2AM7v1SP3gOKPSHMP6MzhBKS5Tk"
     },
     "2": {
       "username": "user2",
       "password": "pbkdf2:sha256:150000$TuDoVjwh$79a9eab9a295ca68f87a2920216b61a8c98954f87091006cfe139047f2bb9ffd",
-      "token": "rUTfmmnA0fP_w7AIIKgaBrcC7H9ofUedudbh65RN0Ck"
+      "token": "6IIdlLYvo8qITEpsgVjFUAdqaAwfQJyOi2d8CPYQ1tM"
     }
   },
   "rooms": {
@@ -21,7 +21,7 @@
   },
   "messages": {
     "meta": {
-      "last_id": "29"
+      "last_id": "32"
     },
     "1": {
       "message": "hello, world!",
@@ -254,6 +254,30 @@
         "id": "2"
       },
       "timestamp": "2020-02-29 23:54:43.317555"
+    },
+    "30": {
+      "message": "hello there!!!!!!!!!",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-03-01 11:47:30.467016"
+    },
+    "31": {
+      "message": "test messageee",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-03-01 12:01:58.930989"
+    },
+    "32": {
+      "message": "test from user2",
+      "from_user": {
+        "username": "user2",
+        "id": "2"
+      },
+      "timestamp": "2020-03-01 12:02:33.928613"
     }
   }
 }

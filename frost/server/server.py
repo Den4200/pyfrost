@@ -58,7 +58,8 @@ class FrostServer(BaseServer):
                         'headers': {
                             Header.METHOD.value: Method.NEW_TOKEN.value
                         },
-                        'auth_token': resp
+                        'auth_token': resp['token'],
+                        'id': resp['id']
                     })
 
                 elif method == Method.REGISTER.value:

@@ -30,16 +30,14 @@ class FrostClient(BaseClient):
         resp = exec_method(method, data)
         return resp
 
-    def login(self, id_, username, password) -> None:
+    def login(self, username, password) -> None:
         self.send({
             'headers': {
                 Header.METHOD.value: Method.LOGIN.value
             },
-            'id': id_,
             'username': username,
             'password': password
         })
-        _store_id({'id': id_})
         self.recieve()
 
     def register(self, username, password) -> None:

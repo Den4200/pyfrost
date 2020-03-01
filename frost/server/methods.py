@@ -31,24 +31,28 @@ def _register(data) -> str:
 
 
 def _login(data) -> str:
-    id_ = data['id']
     username = data['username']
     password = data['password']
 
+    users = User.entries()
     contents = Base.data()
-    user = User.search(id_)
+    
+    for id_, user in users.items():
+        if (
+            id_ != 'meta' and
+            user['username'] == username and
+            check_password_hash(user['password'], password)
+        ):
+            token = secrets.token_urlsafe()
+            contents['users'][id_]['token'] = token
 
-    if (user is not None and
-        user['username'] == username and
-        check_password_hash(user['password'], password)):
+            logging.info(f'User logged in: {username}')
 
-        token = secrets.token_urlsafe()
-        contents['users'][id_]['token'] = token
-
-        logging.info(f'User logged in: {username}')
-
-        Base.commit(contents)
-        return token
+            Base.commit(contents)
+            return {
+                'token': token,
+                'id': id_
+            }
 
 
 @auth_required
@@ -95,7 +99,7 @@ def _get_all_msgs(data, max_=50, token=None, id_=None):
         if msg_id != 'meta' and idx >= max_:
             break
 
-    logging.info(f'User ID: {id_} requested {len(result)} messages')
+    logging.info(f'User ID: {id_} requested {len(result) - 1} messages')
     return _sort_msgs(result)
 
 
@@ -125,7 +129,6 @@ def _get_new_msgs(data, token=None, id_=None):
     
     if len(results) > 0:
         logging.info(f'User ID: {id_} requested {len(results)} messages')
-        print(last_ts)
         return _sort_msgs(results)
 
 
