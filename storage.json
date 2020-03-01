@@ -6,12 +6,12 @@
     "1": {
       "username": "user1",
       "password": "pbkdf2:sha256:150000$AA8ObAeo$82869f9d67637eb8363735478c4311b1ed0e2283d3da5536329ba9baddcd31e7",
-      "token": "VlTpcFpuYDXrFjsdUsiaMizN5lUOC9j0pzQSgVqe2RM"
+      "token": "1yRsgPhmos9oPDGvSDVfYS11yfzUmaQQLHg4Jm3tfzU"
     },
     "2": {
       "username": "user2",
       "password": "pbkdf2:sha256:150000$TuDoVjwh$79a9eab9a295ca68f87a2920216b61a8c98954f87091006cfe139047f2bb9ffd",
-      "token": "KTQ8j7kelR7jqj3dL9TRajkjw3Ebs4y4a78rafVweLg"
+      "token": "rUTfmmnA0fP_w7AIIKgaBrcC7H9ofUedudbh65RN0Ck"
     }
   },
   "rooms": {
@@ -21,7 +21,7 @@
   },
   "messages": {
     "meta": {
-      "last_id": "13"
+      "last_id": "29"
     },
     "1": {
       "message": "hello, world!",
@@ -126,6 +126,134 @@
         "id": "1"
       },
       "timestamp": "2020-02-28 16:56:00.165579"
+    },
+    "14": {
+      "message": "very cool!",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:25:44.867222"
+    },
+    "15": {
+      "message": "test message",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:25:52.020267"
+    },
+    "16": {
+      "message": "1",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:29:42.952381"
+    },
+    "17": {
+      "message": "2",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:29:50.872968"
+    },
+    "18": {
+      "message": "hello",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:43:40.597742"
+    },
+    "19": {
+      "message": "hi!",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:43:45.372136"
+    },
+    "20": {
+      "message": "why is it sending old msgs from this session",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:44:05.984580"
+    },
+    "21": {
+      "message": "test",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:50:42.110280"
+    },
+    "22": {
+      "message": "another test",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:50:54.487379"
+    },
+    "23": {
+      "message": "test",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:52:54.242907"
+    },
+    "24": {
+      "message": "another one",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:52:59.959723"
+    },
+    "25": {
+      "message": "wow i'm just stupid",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:53:08.239742"
+    },
+    "26": {
+      "message": "sigh",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-02-29 23:53:09.597171"
+    },
+    "27": {
+      "message": "testing from user2!",
+      "from_user": {
+        "username": "user2",
+        "id": "2"
+      },
+      "timestamp": "2020-02-29 23:54:11.281587"
+    },
+    "28": {
+      "message": "i think it's working",
+      "from_user": {
+        "username": "user2",
+        "id": "2"
+      },
+      "timestamp": "2020-02-29 23:54:35.461074"
+    },
+    "29": {
+      "message": "hooray!!!",
+      "from_user": {
+        "username": "user2",
+        "id": "2"
+      },
+      "timestamp": "2020-02-29 23:54:43.317555"
     }
   }
 }

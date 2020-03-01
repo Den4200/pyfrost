@@ -78,9 +78,9 @@ def _send_msg(data, token=None, id_=None):
 
 def _sort_msgs(msgs):
     sorted_ids = sorted([
-        id_ for id_ in msgs if id_ != 'meta'
-    ], key=lambda id_: int(id_))
-    return { id_: msgs[id_] for id_ in sorted_ids }
+        int(id_) for id_ in msgs if id_ != 'meta'
+    ])
+    return { str(id_): msgs[str(id_)] for id_ in sorted_ids }
 
 
 @auth_required
@@ -125,6 +125,7 @@ def _get_new_msgs(data, token=None, id_=None):
     
     if len(results) > 0:
         logging.info(f'User ID: {id_} requested {len(results)} messages')
+        print(last_ts)
         return _sort_msgs(results)
 
 

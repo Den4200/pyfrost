@@ -8,6 +8,7 @@ class Messages:
     contents = dict()
 
 
+# Store messages in memory globally
 messages = Messages()
 
 
@@ -41,6 +42,7 @@ def run_client():
         input('Password: ')
     )
     msgs = client.get_all_msgs()
+    messages.contents = msgs
     print(msgs)
 
     listen(client)
