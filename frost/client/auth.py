@@ -5,13 +5,13 @@ import functools
 @functools.lru_cache()
 def get_auth_token():
     with open('.frost', 'r') as f:
-        return json.load(f)['auth_token']
+        return json.load(f).get('auth_token')
 
 
 @functools.lru_cache()
 def get_id():
     with open('.frost', 'r') as f:
-        return json.load(f)['id']
+        return json.load(f).get('id')
 
 
 def get_auth(func):
