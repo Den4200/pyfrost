@@ -2,10 +2,7 @@ from typing import Any
 import json
 
 from .headers import Header, Method
-from .methods import (
-    exec_method,
-    _store_id
-)
+from .methods import exec_method
 from .socketio import BaseClient
 from .auth import get_auth
 
@@ -84,5 +81,5 @@ class FrostClient(BaseClient):
             },
             'last_msg_timestamp': last
         })
-        
+
         return self.recieve()

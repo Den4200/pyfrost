@@ -18,6 +18,6 @@ class Method(Enum):
 
     ALL_MSG: int = 5
     GET_ALL_MSG: int = 6
-    
+
     NEW_TOKEN: int = 7
     NEW_ID: int = 8

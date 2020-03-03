@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict
 import json
 
-from .headers import Header, Method
+from .headers import Method
 
 
 def _store_data(name, data):
@@ -46,8 +46,9 @@ def _all_msgs(data):
         _update_last_msg_ts(
             list(msgs.values())[-1]['timestamp']
         )
-        
+
     return msgs
+
 
 METHODS: Dict[int, Callable] = {
     Method.NEW_TOKEN.value: _store_token,
