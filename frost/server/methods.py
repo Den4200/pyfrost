@@ -36,7 +36,7 @@ def _login(data) -> str:
 
     users = User.entries()
     contents = Base.data()
-    
+
     for id_, user in users.items():
         if (
             id_ != 'meta' and
@@ -84,7 +84,7 @@ def _sort_msgs(msgs):
     sorted_ids = sorted([
         int(id_) for id_ in msgs if id_ != 'meta'
     ])
-    return { str(id_): msgs[str(id_)] for id_ in sorted_ids }
+    return {str(id_): msgs[str(id_)] for id_ in sorted_ids}
 
 
 @auth_required
@@ -126,7 +126,7 @@ def _get_new_msgs(data, token=None, id_=None):
             results[msg_id] = msg
         else:
             break
-    
+
     if len(results) > 0:
         logging.info(f'User ID: {id_} requested {len(results)} messages')
         return _sort_msgs(results)
