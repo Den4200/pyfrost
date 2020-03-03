@@ -1,7 +1,6 @@
 from typing import Any, Callable, Dict
 from datetime import datetime
 import secrets
-import logging
 
 from werkzeug.security import (
     generate_password_hash,
@@ -11,6 +10,7 @@ from werkzeug.security import (
 from .headers import Method
 from .storage import Base, User, Message
 from .auth import auth_required
+from .logger import logger
 
 
 def _register(data) -> str:
@@ -26,7 +26,7 @@ def _register(data) -> str:
         )
     )
 
-    logging.info(f'New user registered: {username}')
+    logger.info(f'New user registered: {username}')
     return id_
 
 
@@ -46,7 +46,7 @@ def _login(data) -> str:
             token = secrets.token_urlsafe()
             contents['users'][id_]['token'] = token
 
-            logging.info(f'User logged in: {username}')
+            logger.info(f'User logged in: {username}')
 
             Base.commit(contents)
             return {
@@ -69,7 +69,7 @@ def _send_msg(data, token=None, id_=None):
         })
     )
 
-    logging.info(f'[ Message ] {username}: {msg}')
+    logger.info(f'[ Message ] {username}: {msg}')
     return {
         'from_user': {
             'username': username,
@@ -99,7 +99,7 @@ def _get_all_msgs(data, max_=50, token=None, id_=None):
         if msg_id != 'meta' and idx >= max_:
             break
 
-    logging.info(f'User ID: {id_} requested {len(result) - 1} messages')
+    logger.info(f'User ID: {id_} requested {len(result) - 1} messages')
     return _sort_msgs(result)
 
 
@@ -128,7 +128,7 @@ def _get_new_msgs(data, token=None, id_=None):
             break
 
     if len(results) > 0:
-        logging.info(f'User ID: {id_} requested {len(results)} messages')
+        logger.info(f'User ID: {id_} requested {len(results)} messages')
         return _sort_msgs(results)
 
 

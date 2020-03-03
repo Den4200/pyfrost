@@ -1,4 +1,4 @@
-import sys
+import sys  # NOQA: F401
 from sys import argv
 
 
@@ -29,5 +29,4 @@ if __name__ == "__main__":
         main()
 
     finally:
-        # sys.stderr.close()
-        pass
+        sys.stderr.close()
