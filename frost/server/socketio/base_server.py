@@ -4,13 +4,13 @@ from typing import (
     Optional,
     Callable
 )
-import logging
 import pickle
 import socket
 import struct
 from dataclasses import dataclass
 
 from .utils import threaded
+from ..logger import logger
 
 
 @dataclass
@@ -75,7 +75,7 @@ class BaseServer:
 
         else:
             self._socket.listen()
-            logging.info('Server is online!')
+            logger.info('Server is online!')
 
             run = True
             while run:
@@ -91,7 +91,7 @@ class BaseServer:
                         break
 
                 conn, addr = conn_data.conn, conn_data.addr
-                logging.info(f'Connection established to {addr}')
+                logger.info(f'Connection established to {addr}')
 
                 if self.func is not None:
                     self.func(conn, addr)
