@@ -6,12 +6,12 @@
     "1": {
       "username": "user1",
       "password": "pbkdf2:sha256:150000$AA8ObAeo$82869f9d67637eb8363735478c4311b1ed0e2283d3da5536329ba9baddcd31e7",
-      "token": "hwS4EUk5XdkOyBij2AM7v1SP3gOKPSHMP6MzhBKS5Tk"
+      "token": "37oxPNkjRb7nmd7Na1eFPBboe4wqHq3Y7Dw0SZjQ59I"
     },
     "2": {
       "username": "user2",
       "password": "pbkdf2:sha256:150000$TuDoVjwh$79a9eab9a295ca68f87a2920216b61a8c98954f87091006cfe139047f2bb9ffd",
-      "token": "6IIdlLYvo8qITEpsgVjFUAdqaAwfQJyOi2d8CPYQ1tM"
+      "token": "B_Lo9iU6ycbg9Yi9X6QS1H2zCPpKJ21VeDqm1Wp6-WA"
     }
   },
   "rooms": {
@@ -21,7 +21,7 @@
   },
   "messages": {
     "meta": {
-      "last_id": "32"
+      "last_id": "33"
     },
     "1": {
       "message": "hello, world!",
@@ -278,6 +278,14 @@
         "id": "2"
       },
       "timestamp": "2020-03-01 12:02:33.928613"
+    },
+    "33": {
+      "message": "testing",
+      "from_user": {
+        "username": "user1",
+        "id": "1"
+      },
+      "timestamp": "2020-03-02 09:12:17.617757"
     }
   }
 }

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from frost import FrostClient
 from frost.client.socketio import threaded
 
+
 @dataclass
 class Messages:
     contents = dict()
@@ -27,7 +28,7 @@ def listen(client: 'FrostClient') -> None:
 @threaded()
 def send_msg(client: 'FrostClient'):
     while True:
-        msg = input('> ')
+        msg = input()
         client.send_msg(msg)
 
 
