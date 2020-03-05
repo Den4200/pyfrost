@@ -9,8 +9,8 @@ from .auth import get_auth
 
 class FrostClient(BaseClient):
 
-    def __init__(self) -> None:
-        super(FrostClient, self).__init__()
+    def __init__(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
+        super(FrostClient, self).__init__(ip, port)
 
     def __enter__(self) -> None:
         self.connect()
