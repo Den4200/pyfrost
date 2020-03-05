@@ -40,12 +40,8 @@ class BaseServer:
         value = socket.htonl(len(packets))
         size = struct.pack('L', value)
 
-        try:
-            conn.send(size)
-            conn.send(packets)
-
-        except ConnectionResetError:
-            pass
+        conn.send(size)
+        conn.send(packets)
 
     def recieve(self, conn: 'socket.socket') -> Any:
         size = struct.calcsize('L')
