@@ -4,6 +4,7 @@ from typing import (
     Optional,
     Callable
 )
+import time
 import pickle
 import socket
 import struct
@@ -85,7 +86,7 @@ class BaseServer:
                 # Makes the server stoppable
                 while conn_data.conn is None or conn_data.addr is None:
                     try:
-                        pass
+                        time.sleep(0.1)
                     except KeyboardInterrupt:
                         run = False
                         break
