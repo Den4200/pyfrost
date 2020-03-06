@@ -36,7 +36,7 @@ class BaseClient:
         return pickle.loads(result)
 
     def send(self, data: Any) -> None:
-        packets = pickle.dumps(data)
+        packets = pickle.dumps(data, protocol=0)
         value = socket.htonl(len(packets))
         size = struct.pack('L', value)
         self._socket.send(size)
