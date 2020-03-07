@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict
 import json
 
-from .headers import Method
+from frost.client.headers import Method
 
 
 def _store_data(name, data):

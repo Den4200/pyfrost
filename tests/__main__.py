@@ -6,11 +6,11 @@ def main():
     if len(argv) == 2:
 
         if argv[1] == 'server':
-            from .run_server import run_server
+            from tests.run_server import run_server
             run_server()
 
         elif argv[1] == 'client':
-            from .run_client import run_client
+            from tests.run_client import run_client
             run_client()
 
         elif argv[1] == 'init_db':

@@ -1,4 +1,4 @@
-from .base import Base, Unique
+from frost.server.storage.base import Base, Unique
 
 
 class User(Base):

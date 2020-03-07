@@ -1,10 +1,10 @@
 from typing import Any
 import json
 
-from .headers import Header, Method
-from .methods import exec_method
-from .socketio import BaseClient
-from .auth import get_auth
+from frost.client.headers import Header, Method
+from frost.client.methods import exec_method
+from frost.client.socketio import BaseClient
+from frost.client.auth import get_auth
 
 
 class FrostClient(BaseClient):

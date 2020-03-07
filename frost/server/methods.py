@@ -7,10 +7,10 @@ from werkzeug.security import (
     check_password_hash
 )
 
-from .headers import Method
-from .storage import Base, User, Message
-from .auth import auth_required
-from .logger import logger
+from frost.server.headers import Method
+from frost.server.storage import Base, User, Message
+from frost.server.auth import auth_required
+from frost.server.logger import logger
 
 
 def _register(data) -> str:

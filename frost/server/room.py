@@ -1,4 +1,4 @@
-from .exceptions import MaxRoomSize
+from frost.server.exceptions import MaxRoomSize
 
 
 class Room:

@@ -5,7 +5,7 @@ from sqlalchemy import (
     Text,
     ForeignKey
 )
-from ..db import Base
+from frost.server.database.db import Base
 
 
 class User(Base):

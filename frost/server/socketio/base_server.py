@@ -10,8 +10,8 @@ import socket
 import struct
 from dataclasses import dataclass
 
-from .utils import threaded
-from ..logger import logger
+from frost.server.socketio.utils import threaded
+from frost.server.logger import logger
 
 
 @dataclass

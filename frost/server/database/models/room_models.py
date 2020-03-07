@@ -3,7 +3,7 @@ from sqlalchemy import (
     Integer,
     ForeignKey
 )
-from ..db import Base
+from frost.server.database.db import Base
 
 
 class RoomMember(Base):

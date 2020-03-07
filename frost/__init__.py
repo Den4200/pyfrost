@@ -1,4 +1,4 @@
-from .server import FrostServer
-from .client import FrostClient
+from frost.server.server import FrostServer
+from frost.client.client import FrostClient
 
 __all__ = ('FrostServer', 'FrostClient')

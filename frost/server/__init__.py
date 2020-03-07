@@ -1,9 +1,9 @@
-from .server import FrostServer
-from .room import Room
-from .user import User, Status
-from .headers import Header, Method
-from .auth import auth_required
-from . import logger  # NOQA: F401
+from frost.server.server import FrostServer
+from frost.server.room import Room
+from frost.server.user import User, Status
+from frost.server.headers import Header, Method
+from frost.server.auth import auth_required
+from frost.server.logger import logger  # NOQA: F401
 
 __all__ = (
     'FrostServer',
@@ -12,5 +12,6 @@ __all__ = (
     'Status',
     'Header',
     'Method',
-    'auth_required'
+    'auth_required',
+    'logger'
 )

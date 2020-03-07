@@ -3,10 +3,10 @@ from pathlib import Path
 import struct
 import socket
 
-from .room import Room
-from .methods import exec_method
-from .headers import Header, Method
-from .socketio import BaseServer, threaded
+from frost.server.room import Room
+from frost.server.methods import exec_method
+from frost.server.headers import Header, Method
+from frost.server.socketio import BaseServer, threaded
 
 
 class FrostServer(BaseServer):

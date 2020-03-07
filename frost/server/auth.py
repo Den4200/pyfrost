@@ -1,5 +1,5 @@
-from .headers import Header
-from .storage import User
+from frost.server.headers import Header
+from frost.server.storage import User
 
 
 def auth_required(func):

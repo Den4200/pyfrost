@@ -2,12 +2,12 @@ from .db import (
     init_db,
     db_session
 )
-from .models.main_models import (
+from frost.server.database.models.main_models import (
     User,
     Room,
     Message
 )
-from .models.room_models import (
+from frost.server.database.models.room_models import (
     RoomMember
 )
 
