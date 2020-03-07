@@ -62,14 +62,6 @@ class FrostServer(BaseServer):
                         'id': resp['id']
                     })
 
-                elif method == Method.REGISTER.value:
-                    self.send(conn, {
-                        'headers': {
-                            Header.METHOD.value: Method.NEW_ID.value
-                        },
-                        'id': resp
-                    })
-
                 elif method == Method.GET_ALL_MSG.value:
                     self.send(conn, {
                         'headers': {
