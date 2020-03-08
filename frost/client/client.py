@@ -91,7 +91,7 @@ class FrostClient(BaseClient):
         :type msg: str
         :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
         :type token: str
-        :param id_: The user's ID, defaults to None
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
         :type id_: str
         """
         self.send({
@@ -109,7 +109,7 @@ class FrostClient(BaseClient):
 
         :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
         :type token: str
-        :param id_: The user's ID, defaults to None
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
         :type id_: str
         :return: All messages
         :rtype: Any
@@ -133,7 +133,7 @@ class FrostClient(BaseClient):
 
         :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
         :type token: str
-        :param id_: The user's ID, defaults to None
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
         :type id_: str
         :return: New, unread messages
         :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
