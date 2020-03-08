@@ -1,0 +1,30 @@
+client.socketio package
+=======================
+
+Submodules
+----------
+
+client.socketio.base\_client module
+-----------------------------------
+
+.. automodule:: client.socketio.base_client
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+client.socketio.utils module
+----------------------------
+
+.. automodule:: client.socketio.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: client.socketio
+   :members:
+   :undoc-members:
+   :show-inheritance:

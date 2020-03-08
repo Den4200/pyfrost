@@ -1,16 +1,25 @@
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Tuple, Union
 import json
 
 from frost.client.headers import Method
 
 
-def _store_data(name, data):
-    value = data[name]
+def _store_data(key: str, data: Dict[Any, Any]) -> Any:
+    """Stores data into the `.frost` file.
+
+    :param key: The key of where to find the data to store
+    :type key: str
+    :param data: Data received from the server
+    :type data: Dict[Any, Any]
+    :return: The value of the key in `data`
+    :rtype: Any
+    """
+    value = data[key]
 
     with open('.frost', 'r') as f:
         contents = json.load(f)
 
-    contents[name] = value
+    contents[key] = value
 
     with open('.frost', 'w') as f:
         json.dump(contents, f, indent=2)
@@ -18,18 +27,37 @@ def _store_data(name, data):
     return value
 
 
-def _store_token(data):
+def _store_token(data: Dict[Any, Any]) -> Tuple[str, str]:
+    """Stores the auth token and ID from `data` in `.frost`.
+
+    :param data: Data received from the server
+    :type data: Dict[Any, Any]
+    :return: The auth token and ID
+    :rtype: Tuple[str, str]
+    """
     return (
         _store_data('auth_token', data),
         _store_id(data)
     )
 
 
-def _store_id(data):
+def _store_id(data: Dict[Any, Any]) -> str:
+    """Stores the ID from `data` in `.frost`.
+
+    :param data: Data received from the server
+    :type data: Dict[Any, Any]
+    :return: The ID
+    :rtype: str
+    """
     return _store_data('id', data)
 
 
 def _update_last_msg_ts(ts: str) -> None:
+    """Updates the timestamp for the last message received.
+
+    :param ts: The timestamp for the last message recieved
+    :type ts: str
+    """
     with open('.frost', 'r') as f:
         contents = json.load(f)
 
@@ -39,7 +67,14 @@ def _update_last_msg_ts(ts: str) -> None:
         json.dump(contents, f, indent=2)
 
 
-def _all_msgs(data):
+def _all_msgs(data: Dict[Any, Any]) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
+    """Gets messages from `data` and updates the timestamp for the last received message.
+
+    :param data: Data received from the server
+    :type data: Dict[Any, Any]
+    :return: The messages received from the server
+    :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+    """
     msgs = data['msgs']
 
     if msgs:
@@ -58,5 +93,14 @@ METHODS: Dict[int, Callable] = {
 }
 
 
-def exec_method(item, data) -> Any:
+def exec_method(item: Any, data: Dict[Any, Any]) -> Any:
+    """Executes the method specified in the `data` headers.
+
+    :param item: The specific method to execute
+    :type item: Any
+    :param data: Data received from the server
+    :type data: Dict[Any, Any]
+    :return: The data the specific method returned
+    :rtype: Any
+    """
     return METHODS[item](data)

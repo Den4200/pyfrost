@@ -1,0 +1,53 @@
+client package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+
+   client.socketio
+
+Submodules
+----------
+
+client.auth module
+------------------
+
+.. automodule:: client.auth
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+client.client module
+--------------------
+
+.. automodule:: client.client
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+client.headers module
+---------------------
+
+.. automodule:: client.headers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+client.methods module
+---------------------
+
+.. automodule:: client.methods
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: client
+   :members:
+   :undoc-members:
+   :show-inheritance:
