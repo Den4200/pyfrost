@@ -1,7 +1,7 @@
 Welcome to the PyFrost documentation!
 =====================================
 
-.. note::
+.. warning::
    Only the :code:`frost.client` section of the documentation is finished.
    The documentation for :code:`frost.server` is under way.
 
