@@ -5,7 +5,7 @@ from frost.client.headers import Method
 
 
 def _store_data(key: str, data: Dict[Any, Any]) -> Any:
-    """Stores data into the `.frost` file.
+    """Stores data into the :code:`.frost` file.
 
     :param key: The key of where to find the data to store
     :type key: str
@@ -28,7 +28,7 @@ def _store_data(key: str, data: Dict[Any, Any]) -> Any:
 
 
 def _store_token(data: Dict[Any, Any]) -> Tuple[str, str]:
-    """Stores the auth token and ID from `data` in `.frost`.
+    """Stores the auth token and ID from :code:`data` in :code:`.frost`.
 
     :param data: Data received from the server
     :type data: Dict[Any, Any]
@@ -42,7 +42,7 @@ def _store_token(data: Dict[Any, Any]) -> Tuple[str, str]:
 
 
 def _store_id(data: Dict[Any, Any]) -> str:
-    """Stores the ID from `data` in `.frost`.
+    """Stores the ID from :code:`data` in :code:`.frost`.
 
     :param data: Data received from the server
     :type data: Dict[Any, Any]
@@ -68,7 +68,7 @@ def _update_last_msg_ts(ts: str) -> None:
 
 
 def _all_msgs(data: Dict[Any, Any]) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
-    """Gets messages from `data` and updates the timestamp for the last received message.
+    """Gets messages from :code:`data` and updates the timestamp for the last received message.
 
     :param data: Data received from the server
     :type data: Dict[Any, Any]
@@ -94,7 +94,7 @@ METHODS: Dict[int, Callable] = {
 
 
 def exec_method(item: Any, data: Dict[Any, Any]) -> Any:
-    """Executes the method specified in the `data` headers.
+    """Executes the method specified in the :code:`data` headers.
 
     :param item: The specific method to execute
     :type item: Any

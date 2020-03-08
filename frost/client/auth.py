@@ -7,7 +7,7 @@ import functools
 def get_auth_token() -> Optional[str]:
     """Returns the saved auth token.
 
-    :return: The auth token saved in `.frost`
+    :return: The auth token saved in :code:`.frost`
     :rtype: Optional[str]
     """
     with open('.frost', 'r') as f:
@@ -18,7 +18,7 @@ def get_auth_token() -> Optional[str]:
 def get_id() -> Optional[str]:
     """Returns the saved id.
 
-    :return: The ID saved in `.frost`
+    :return: The ID saved in :code:`.frost`
     :rtype: Optional[str]
     """
     with open('.frost', 'r') as f:

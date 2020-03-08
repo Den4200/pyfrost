@@ -7,15 +7,15 @@ import struct
 
 class BaseClient:
     """The base client to connect to a server & send and receive data.
+
+    :param ip: The IP address of the server to connect to, defaults to '127.0.0.1'
+    :type ip: str, optional
+    :param port: The port of the server to connect to, defaults to 5555
+    :type port: int, optional
     """
 
     def __init__(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """The constructor method.
-
-        :param ip: The IP address of the server to connect to, defaults to '127.0.0.1'
-        :type ip: str, optional
-        :param port: The port of the server to connect to, defaults to 5555
-        :type port: int, optional
         """
         self.ip = ip
         self.port = port

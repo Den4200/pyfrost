@@ -9,15 +9,15 @@ from frost.client.auth import get_auth
 
 class FrostClient(BaseClient):
     """The Frost Client.
+
+    :param ip: The IP address of the server to connect to, defaults to '127.0.0.1'
+    :type ip: str, optional
+    :param port: The port of the server to connect to, defaults to 5555
+    :type port: int, optional
     """
 
     def __init__(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """The constructor method.
-
-        :param ip: The IP address of the server to connect to, defaults to '127.0.0.1'
-        :type ip: str, optional
-        :param port: The port of the server to connect to, defaults to 5555
-        :type port: int, optional
         """
         super(FrostClient, self).__init__(ip, port)
 
@@ -104,7 +104,11 @@ class FrostClient(BaseClient):
         })
 
     @get_auth
-    def get_all_msgs(self, token: str, id_: str) -> Any:
+    def get_all_msgs(
+        self,
+        token: str,
+        id_: str
+    ) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
         """Get all messages from the server.
 
         :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
@@ -112,7 +116,7 @@ class FrostClient(BaseClient):
         :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
         :type id_: str
         :return: All messages
-        :rtype: Any
+        :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
         """
         self.send({
             'headers': {
