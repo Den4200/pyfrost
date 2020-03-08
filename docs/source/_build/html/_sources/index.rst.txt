@@ -4,7 +4,7 @@ Welcome to the PyFrost documentation!
 The Official Client
 -------------------
 The official client for this library is under development.
-You can test it out and/or contribute `here <https://www.github.com/Den4200/apollo/>`_.
+You can test it out and/or contribute to the `repository <https://www.github.com/Den4200/apollo/>`_.
 
 The Source Code
 ---------------
