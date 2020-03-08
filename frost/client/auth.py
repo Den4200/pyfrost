@@ -33,6 +33,7 @@ def get_auth(func: Callable) -> Callable:
     :return: The inner execute function
     :rtype: Callable
     """
+    @functools.wraps(func)
     def execute(*args, **kwargs):
         """Executes the given function, passsing through the auth token and id.
         """

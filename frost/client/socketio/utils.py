@@ -1,5 +1,6 @@
 from typing import Any, Callable
 from threading import Thread
+from functools import wraps
 
 
 class threaded:
@@ -20,7 +21,7 @@ class threaded:
         :return: The inner execute function
         :rtype: Callable
         """
-
+        @wraps(func)
         def execute(*args: Any, **kwargs: Any) -> None:
             """Starts the function in a new thread.
             """
