@@ -1,4 +1,5 @@
 from typing import Any, Dict, Union
+from pathlib import Path
 import json
 
 from frost.client.headers import Header, Method
@@ -20,6 +21,12 @@ class FrostClient(BaseClient):
         """The constructor method.
         """
         super(FrostClient, self).__init__(ip, port)
+
+        frost_file = Path('.frost')
+
+        if not frost_file.exists():
+            with open(str(frost_file), 'w') as f:
+                json.dump({}, f)
 
     def __enter__(self) -> 'FrostClient':
         """The __enter__ method, connects to the server.

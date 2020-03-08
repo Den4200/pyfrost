@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+_build/
 develop-eggs/
 dist/
 downloads/
@@ -131,3 +132,7 @@ proj_init.py
 
 # Databases
 *.db
+
+# Storage
+.frost
+storage.json

@@ -2,11 +2,13 @@ from typing import Callable
 from pathlib import Path
 import struct
 import socket
+import json
 
 from frost.server.room import Room
 from frost.server.methods import exec_method
 from frost.server.headers import Header, Method
 from frost.server.socketio import BaseServer, threaded
+from frost.server.storage.defaults import DEFAULT_FORMAT
 
 
 class FrostServer(BaseServer):
@@ -24,6 +26,11 @@ class FrostServer(BaseServer):
         self._rooms = list()
 
         self.func = self._on_user_connect
+
+        storage = Path('storage.json')
+        if not storage.exists():
+            with open(str(storage), 'w') as f:
+                json.dump(DEFAULT_FORMAT, f, indent=2)
 
     def room(self, *deco_args, **deco_kwargs) -> Callable:
 
