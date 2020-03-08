@@ -1,4 +1,4 @@
-from .db import (
+from frost.server.database.db import (
     init_db,
     db_session
 )
