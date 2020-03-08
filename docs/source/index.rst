@@ -13,6 +13,10 @@ Feel free to contribute to this project.
 
 Contents
 --------
+.. warning::
+   Only the :code:`frost.client` section of the documentation is finished.
+   The documentation for :code:`frost.server` is under way.
+
 .. toctree::
    :maxdepth: 4
    :glob:
