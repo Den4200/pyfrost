@@ -16,5 +16,3 @@ Contents
 .. toctree::
    :maxdepth: 2
    :glob:
-
-Nothing here yet!

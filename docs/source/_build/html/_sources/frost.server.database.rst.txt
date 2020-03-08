@@ -1,6 +1,13 @@
 frost.server.database package
 =============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+   frost.server.database.models
+
 Submodules
 ----------
 
