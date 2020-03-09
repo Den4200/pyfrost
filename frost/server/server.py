@@ -25,7 +25,7 @@ class FrostServer(BaseServer):
 
         self._rooms = list()
 
-        self.func = self._on_user_connect
+        self.func = self.on_user_connect
 
         storage = Path('storage.json')
         if not storage.exists():
@@ -46,7 +46,7 @@ class FrostServer(BaseServer):
         return inner
 
     @threaded()
-    def _on_user_connect(self, conn: 'socket.socket', addr):
+    def on_user_connect(self, conn: 'socket.socket', addr):
         while True:
             try:
                 data = self.recieve(conn)
