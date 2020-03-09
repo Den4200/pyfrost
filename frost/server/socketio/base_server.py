@@ -16,6 +16,13 @@ from frost.server.logger import logger
 
 @dataclass
 class ConnectionData:
+    """An object used to store connection data accross threads.
+
+    :param conn: The client's connection, defaults to None
+    :type conn: socket.socket, optional
+    :param addr: The client's IP address and port, defaults to None
+    :type addr: Tuple[str, int], optional
+    """
     conn: Optional['socket.socket'] = None
     addr: Optional[Tuple[str, int]] = None
 
@@ -88,7 +95,7 @@ class BaseServer:
         conn_data_cls.conn, conn_data_cls.addr = self._socket.accept()
 
     def start(self) -> None:
-        """Starts the threaded, multi-client Server.
+        """Starts the threaded, multi-client server.
         """
         try:
             self._socket.bind((self.ip, self.port))
