@@ -19,9 +19,9 @@ class ConnectionData:
     """An object used to store connection data accross threads.
 
     :param conn: The client's connection, defaults to None
-    :type conn: socket.socket, optional
+    :type conn: Optional[socket.socket]
     :param addr: The client's IP address and port, defaults to None
-    :type addr: Tuple[str, int], optional
+    :type addr: Optional[Tuple[str, int]]
     """
     conn: Optional['socket.socket'] = None
     addr: Optional[Tuple[str, int]] = None

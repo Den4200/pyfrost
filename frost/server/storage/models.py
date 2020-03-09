@@ -40,7 +40,7 @@ class Room(Base):
     :type owner_id: str
     :param id_: The room's ID, autofilled by :meth:`frost.server.storage.base._get_id` if None
     :type id_: str, optional
-    :param members: The members of the room, defaults to []
+    :param members: The members of the room, defaults to :code:`[]`
     :type members: list, optional
     """
     __tablename__ = 'rooms'
