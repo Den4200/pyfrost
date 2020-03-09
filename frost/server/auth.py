@@ -15,7 +15,7 @@ def auth_required(func: Callable) -> Callable:
     :return: The inner execute function
     :rtype: Callable
     """
-    @wraps
+    @wraps(func)
     def execute(*args, **kwargs):
         id_ = args[0]['headers'].get(Header.ID_TOKEN.value)
         token = args[0]['headers'].get(Header.AUTH_TOKEN.value)

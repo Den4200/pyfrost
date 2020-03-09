@@ -174,6 +174,9 @@ def _get_new_msgs(
     results = dict()
 
     for msg_id, msg in rev_entries:
+        if msg_id == 'meta':
+            continue
+
         msg_ts = datetime.strptime(
             msg['timestamp'],
             r'%Y-%m-%d %H:%M:%S.%f'
