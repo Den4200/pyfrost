@@ -1,14 +1,32 @@
+from typing import Any, Dict, Optional
 import json
 
 
 class Base:
+    """The base model for data storage.
+    """
 
     @classmethod
-    def search(cls, item):
+    def search(cls, item: Any) -> Any:
+        """Searches the saved data for a specific item.
+
+        :param item: The item to search for
+        :type item: Any
+        :return: The data found under the specific item, returns None if not found
+        :rtype: Any
+        """
         return Base._get_table(cls).get(item)
 
     @classmethod
-    def add(cls, item):
+    def add(cls, item: Any) -> int:
+        """Adds an item under the given specific table.
+
+        :param item: The item to add
+        :type item: Any
+        :raises KeyError: If an item under a given ID already exists
+        :return: The ID of the given item stored under the given table.
+        :rtype: int
+        """
         contents = Base.data()
         table_name = Base._get_table_name(cls)
         data = item.__dict__
@@ -30,7 +48,13 @@ class Base:
         return id_
 
     @classmethod
-    def update(cls, item):
+    def update(cls, item: Any) -> None:
+        """Updates the given item's data. \
+        Does not care if the item already exists.
+
+        :param item: The item to update
+        :type item: Any
+        """
         Base._update(
             Base.data(),
             Base._get_table_name(cls),
@@ -38,7 +62,18 @@ class Base:
         )
 
     @staticmethod
-    def _update(contents, table_name, data):
+    def _update(contents: Dict[str, Any], table_name: str, data: Dict[str, Any]) -> None:
+        """Updates the given item's data.
+
+        :param contents: All saved data
+        :type contents: Dict[str, Any]
+        :param table_name: The name of the table where the item is/will be stored
+        :type table_name: str
+        :param data: The item's data
+        :type data: Dict[str, Any]
+        :raises ValueError: If a value stored in the item is an instance of \
+        :class:`frost.server.storage.base.Unique` and it already exists within the table
+        """
         id_ = str(Base._get_id(contents, table_name, data))
         commit_data = dict()
 
@@ -56,7 +91,7 @@ class Base:
 
                             if val[k] == str(v.data) and key != id_:
                                 commit = False
-                                raise KeyError(
+                                raise ValueError(
                                     f'{v.data} already exists in {k}'
                                 )
 
@@ -81,7 +116,14 @@ class Base:
         return data['id']
 
     @staticmethod
-    def _get_table_name(cls):
+    def _get_table_name(cls) -> Optional[str]:
+        """Gets the table name of the subclass.
+
+        :raises AttributeError: If the subclass does not have a class attribute of \
+        :code:`__tablename__`
+        :return: The table name of the subclass
+        :rtype: Optional[str]
+        """
         if hasattr(cls, '__tablename__'):
             return cls.__tablename__
 
@@ -90,7 +132,13 @@ class Base:
         )
 
     @staticmethod
-    def _get_table(cls):
+    def _get_table(cls) -> Dict[str, Any]:
+        """Get the entries under the specified table.
+
+        :raises ValueError: If the table does not exist
+        :return: The entries under the specified table
+        :rtype: Dict[str, Any]
+        """
         contents = Base.data()
         table = contents.get(Base._get_table_name(cls))
 
@@ -100,21 +148,43 @@ class Base:
         raise ValueError('Table does not exist.')
 
     @staticmethod
-    def commit(data):
+    def commit(data: Dict[str, Any]) -> None:
+        """Commits and saves the data.
+
+        :param data: The data to be saved
+        :type data: Dict[str, Any]
+        """
         with open('storage.json', 'w') as f:
             json.dump(data, f, indent=2)
 
     @staticmethod
-    def data():
+    def data() -> Dict[str, Any]:
+        """Gets the contents of the saved data.
+
+        :return: The contents of the saved data
+        :rtype: Dict[str, Any]
+        """
         with open('storage.json') as f:
             return json.load(f)
 
     @classmethod
-    def entries(cls):
+    def entries(cls) -> Dict[str, Any]:
+        """Get the entries under the specified table.
+
+        :return: The entries under the specified table
+        :rtype: Dict[str, Any]
+        """
         return Base._get_table(cls)
 
 
 class Unique:
+    """Ensures that the data stored is unique within its table.
 
-    def __init__(self, data):
+    :param data: The unique data to be stored in a table
+    :type data: Any
+    """
+
+    def __init__(self, data: Any) -> None:
+        """The constructor method.
+        """
         self.data = data

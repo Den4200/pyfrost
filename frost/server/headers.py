@@ -2,12 +2,16 @@ from enum import Enum
 
 
 class Header(Enum):
+    """The header enums.
+    """
     METHOD: int = 0
     AUTH_TOKEN: int = 1
     ID_TOKEN: int = 2
 
 
 class Method(Enum):
+    """The method enums.
+    """
     LOGIN: int = 0
     REGISTER: int = 1
 

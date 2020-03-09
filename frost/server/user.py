@@ -5,6 +5,8 @@ from enum import Enum
 
 
 class Status(Enum):
+    """The user status enums.
+    """
     ONLINE:  int = 0
     AFK:     int = 1
     DND:     int = 2
@@ -13,6 +15,10 @@ class Status(Enum):
 
 @dataclass
 class User:
+    """Represents a user.
+
+    :raises NotImplementedError: This class is not implemented yet
+    """
     name: str
 
     status: Optional[Status] = None
@@ -21,13 +27,11 @@ class User:
     conn: Optional['socket.socket'] = None
     raddr: Optional[Tuple[str, int]] = None
 
-    def check(self) -> None:
-        """
-        Does general checks on the user
-        and should be run every.
+    def __post_init__(self) -> None:
+        raise NotImplementedError
 
-        Checks user's status and makes sure
-        self.status is an instance of Status.
+    def check(self) -> None:
+        """Does general checks on the user and should be run every tick.
         """
         if self.status not in (None, Status.DND, Status.OFFLINE):
 
