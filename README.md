@@ -8,3 +8,6 @@ An online chat library for creating the client and server.
 ```cmd
 pip install pyfrost
 ```
+
+## Documentation
+The documentation for this library can be found [here](https://pyfrost.readthedocs.io/).
