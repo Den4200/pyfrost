@@ -15,5 +15,7 @@ Base.query = db_session.query_property()
 
 
 def init_db():
+    raise NotImplementedError
+
     from .models import main_models  # NOQA: F401
     Base.metadata.create_all(bind=engine)

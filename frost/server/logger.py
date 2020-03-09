@@ -1,12 +1,14 @@
+"""The logger for the server (:code:`logger`).
+"""
 import logging
 
 
 logger = logging.getLogger('PyFrost')
-handler = logging.StreamHandler()
-formatter = logging.Formatter('[ %(asctime)s ][ %(levelname)s ][ %(name)s ] %(message)s')
+_handler = logging.StreamHandler()
+_formatter = logging.Formatter('[ %(asctime)s ][ %(levelname)s ][ %(name)s ] %(message)s')
 
-handler.setFormatter(formatter)
-handler.setLevel(logging.INFO)
+_handler.setFormatter(_formatter)
+_handler.setLevel(logging.INFO)
 
-logger.addHandler(handler)
+logger.addHandler(_handler)
 logger.setLevel(logging.INFO)
