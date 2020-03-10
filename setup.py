@@ -20,5 +20,17 @@ setuptools.setup(
         "Topic :: Communications ",
         "Topic :: Communications :: Chat"
     ],
+    install_requires=[
+        'astroid==2.3.3',
+        'colorama==0.4.3',
+        'isort==4.3.21',
+        'lazy-object-proxy==1.4.3',
+        'mccabe==0.6.1',
+        'six==1.14.0',
+        'SQLAlchemy==1.3.13',
+        'typed-ast==1.4.1',
+        'Werkzeug==1.0.0',
+        'wrapt==1.11.2'
+    ],
     python_requires='>=3.6',
 )
