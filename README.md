@@ -1,6 +1,7 @@
 # PyFrost
-![PyFrost](https://github.com/Den4200/pyfrost/workflows/PyFrost/badge.svg?branch=master&event=push)
+![PyFrost](https://img.shields.io/github/workflow/status/Den4200/pyfrost/PyFrost/master)
 [![Documentation Status](https://readthedocs.org/projects/pyfrost/badge/?version=latest)](https://pyfrost.readthedocs.io/en/latest/?badge=latest)
+[![MIT License](https://img.shields.io/github/license/Den4200/pyfrost)](LICENSE)
 
 An online chat library for creating the client and server.
 
