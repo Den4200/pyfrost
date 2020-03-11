@@ -7,6 +7,7 @@ class Header(Enum):
     METHOD: int = 0
     AUTH_TOKEN: int = 1
     ID_TOKEN: int = 2
+    STATUS: int = 3
 
 
 class Method(Enum):
@@ -25,3 +26,12 @@ class Method(Enum):
 
     NEW_TOKEN: int = 7
     NEW_ID: int = 8
+
+
+class Status(Enum):
+    """The status enums
+    """
+    SUCCESS = 0
+
+    INVALID_AUTH = 1
+    DUPLICATE_USERNAME = 2
