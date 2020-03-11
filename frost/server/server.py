@@ -78,10 +78,11 @@ class FrostServer(BaseServer):
                 if method == Method.LOGIN.value:
                     self.send(conn, {
                         'headers': {
-                            Header.METHOD.value: Method.NEW_TOKEN.value
+                            Header.METHOD.value: Method.NEW_TOKEN.value,
+                            Header.STATUS.value: resp['status']
                         },
-                        'auth_token': resp['token'],
-                        'id': resp['id']
+                        'auth_token': resp.get('token'),
+                        'id': resp.get('id')
                     })
 
                 elif method == Method.GET_ALL_MSG.value:

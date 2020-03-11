@@ -7,7 +7,7 @@ from werkzeug.security import (
     check_password_hash
 )
 
-from frost.server.headers import Method
+from frost.server.headers import Method, Status
 from frost.server.storage import Base, User, Message
 from frost.server.auth import auth_required
 from frost.server.logger import logger
@@ -64,9 +64,14 @@ def _login(data: Dict[str, Any]) -> Optional[Dict[str, str]]:
 
             Base.commit(contents)
             return {
+                'status': Status.SUCCESS.value,
                 'token': token,
                 'id': id_
             }
+
+    return {
+        'status': Status.INVALID_AUTH.value
+    }
 
 
 @auth_required

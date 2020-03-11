@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from frost import FrostClient
-from frost.client.socketio import threaded
+from frost.client import Status, threaded
 
 
 @dataclass
@@ -37,10 +37,15 @@ def run_client():
     client = FrostClient()
     client.connect()
 
-    client.login(
-        input('Username: '),
-        input('Password: ')
-    )
+    # client.register('user1', 'password')
+
+    r = None
+    while r in (Status.INVALID_AUTH.value, None):
+        r = client.login(
+            input('Username: '),
+            input('Password: ')
+        )
+
     msgs = client.get_all_msgs()
     messages.contents = msgs
     print(msgs)

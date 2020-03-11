@@ -31,5 +31,7 @@ class Method(Enum):
 class Status(Enum):
     """The status enums
     """
-    SUCCESS = 0
-    INVALID_AUTH = 1
+    SUCCESS: int = 0
+
+    INVALID_AUTH: int = 1
+    DUPLICATE_USERNAME: int = 2
