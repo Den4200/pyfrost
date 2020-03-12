@@ -37,11 +37,16 @@ def run_client():
     client = FrostClient()
     client.connect()
 
-    # client.register('user1', 'password')
+    # reg = None
+    # while reg in (Status.DUPLICATE_USERNAME.value, None):
+    #     reg = client.register(
+    #         input('Register Username: '),
+    #         input('Register Password: ')
+    #     )
 
-    r = None
-    while r in (Status.INVALID_AUTH.value, None):
-        r = client.login(
+    login = None
+    while login in (Status.INVALID_AUTH.value, None):
+        login = client.login(
             input('Username: '),
             input('Password: ')
         )

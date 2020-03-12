@@ -15,17 +15,18 @@ class Method(Enum):
     """
     LOGIN: int = 0
     REGISTER: int = 1
+    POST_REGISTER: int = 2
 
-    SEND_MSG: int = 2
+    SEND_MSG: int = 3
 
-    NEW_MSG: int = 3
-    GET_NEW_MSG: int = 4
+    NEW_MSG: int = 4
+    GET_NEW_MSG: int = 5
 
-    ALL_MSG: int = 5
-    GET_ALL_MSG: int = 6
+    ALL_MSG: int = 6
+    GET_ALL_MSG: int = 7
 
-    NEW_TOKEN: int = 7
-    NEW_ID: int = 8
+    NEW_TOKEN: int = 8
+    NEW_ID: int = 9
 
 
 class Status(Enum):

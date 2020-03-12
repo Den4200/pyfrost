@@ -89,6 +89,7 @@ class FrostClient(BaseClient):
             'username': username,
             'password': password
         })
+        return self.recieve()
 
     @get_auth
     def send_msg(self, msg: str, token: str, id_: str) -> None:

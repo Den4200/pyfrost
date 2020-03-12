@@ -1,5 +1,6 @@
 from typing import Any, Callable, Dict, Optional, Union
 from datetime import datetime
+from enum import Enum  # NOQA: F401
 import secrets
 
 from werkzeug.security import (
@@ -8,12 +9,17 @@ from werkzeug.security import (
 )
 
 from frost.server.headers import Method, Status
-from frost.server.storage import Base, User, Message
 from frost.server.auth import auth_required
 from frost.server.logger import logger
+from frost.server.storage import (
+    Base,
+    User,
+    Message,
+    DuplicateValueError
+)
 
 
-def _register(data: Dict[str, Any]) -> str:
+def _register(data: Dict[str, Any]) -> Union[str, 'Status']:
     """Registers the a new user with the given data.
 
     :param data: Data received from the client
@@ -26,24 +32,32 @@ def _register(data: Dict[str, Any]) -> str:
         data['password']
     )
 
-    id_ = User.add(
-        User(
-            username=username,
-            password=password
+    try:
+        id_ = User.add(
+            User(
+                username=username,
+                password=password
+            )
         )
-    )
 
-    logger.info(f'New user registered: {username}')
-    return id_
+    except DuplicateValueError:
+        logger.debug(
+            f'User tried to register for an already existing username: {username}'
+        )
+        return Status.DUPLICATE_USERNAME
+
+    else:
+        logger.info(f'New user registered: {username}')
+        return id_
 
 
-def _login(data: Dict[str, Any]) -> Optional[Dict[str, str]]:
+def _login(data: Dict[str, Any]) -> Dict[str, 'Enum']:
     """Logs in the given user with the given data.
 
     :param data: Data received from the client
     :type data: Dict[str, Any]
-    :return: The user's ID and newly generated token
-    :rtype: Optional[Dict[str, str]]
+    :return: The user's ID, newly generated token, and status OR just the status
+    :rtype: Dict[str, 'Enum']
     """
     username = data['username']
     password = data['password']

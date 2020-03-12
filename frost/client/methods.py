@@ -87,11 +87,16 @@ def _all_msgs(data: Dict[Any, Any]) -> Dict[str, Dict[str, Union[str, Dict[str, 
     return msgs
 
 
+def _post_register(data: Dict[Any, Any]) -> int:
+    return data['headers'][Header.STATUS.value]
+
+
 METHODS: Dict[int, Callable] = {
     Method.NEW_TOKEN.value: _store_token,
     Method.NEW_ID.value: _store_id,
     Method.ALL_MSG.value: _all_msgs,
-    Method.NEW_MSG.value: _all_msgs
+    Method.NEW_MSG.value: _all_msgs,
+    Method.POST_REGISTER.value: _post_register
 }
 
 

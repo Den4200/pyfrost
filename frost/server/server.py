@@ -7,8 +7,8 @@ import json
 
 from frost.server.room import Room
 from frost.server.methods import exec_method
-from frost.server.headers import Header, Method
 from frost.server.socketio import BaseServer, threaded
+from frost.server.headers import Header, Method, Status
 from frost.server.storage.defaults import DEFAULT_FORMAT
 
 
@@ -84,6 +84,25 @@ class FrostServer(BaseServer):
                         'auth_token': resp.get('token'),
                         'id': resp.get('id')
                     })
+
+                elif method == Method.REGISTER.value:
+
+                    if resp == Status.DUPLICATE_USERNAME:
+                        content = {
+                            'headers': {
+                                Header.METHOD.value: Method.POST_REGISTER.value,
+                                Header.STATUS.value: resp.value
+                            }
+                        }
+                    else:
+                        content = {
+                            'headers': {
+                                Header.METHOD.value: Method.POST_REGISTER.value,
+                                Header.STATUS.value: Status.SUCCESS.value
+                            }
+                        }
+
+                    self.send(conn, content)
 
                 elif method == Method.GET_ALL_MSG.value:
                     self.send(conn, {
