@@ -20,7 +20,7 @@ from frost.server.storage import (
 )
 
 
-class Auth(Cog, route='auth'):
+class Auth(Cog, route='authentication'):
 
     def register(self, data: Dict[str, Any]) -> Union[str, 'Status']:
         """Registers the a new user with the given data.
@@ -90,7 +90,10 @@ class Auth(Cog, route='auth'):
         }
 
 
-class Msgs(Cog, route='msgs'):
+class Msgs(Cog, route='messages'):
+
+    def __init__(self):
+        self.t = 'esfes'
 
     @auth_required
     def send_msg(self, data: Dict[str, Any], token=None, id_=None):

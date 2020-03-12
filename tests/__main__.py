@@ -28,12 +28,17 @@ if __name__ == "__main__":
     try:
         # main()
         from frost.server.methods import Auth, Msgs
+        from frost.server.ext import Handler
         from frost.server.ext.cog import _cogs
 
         auth = Auth()
         msgs = Msgs()
 
         print(_cogs)
+
+        handler = Handler()
+        resp = handler.handle('messages/get_all_msgs', {'headers': {}})
+        print(resp)
 
     finally:
         # sys.stderr.close()

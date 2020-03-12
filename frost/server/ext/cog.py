@@ -1,5 +1,4 @@
-from typing import Any, Callable, Optional
-from functools import wraps
+from typing import Any, Optional
 
 from frost.server.ext.exceptions import DirectCogInstance
 
@@ -24,7 +23,7 @@ class Cog:
             _cogs.update({
                 route: {
                     k: v for k, v in members
-                    if not k.startswith('_') and not k.startswith('__') and k != 'route'
+                    if not any((k.startswith('_'), k.startswith('__'), k == 'route'))
                 }
             })
             return self
