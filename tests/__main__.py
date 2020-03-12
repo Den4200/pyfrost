@@ -26,7 +26,15 @@ def main():
 
 if __name__ == "__main__":
     try:
-        main()
+        # main()
+        from frost.server.methods import Auth, Msgs
+        from frost.server.ext.cog import _cogs
+
+        auth = Auth()
+        msgs = Msgs()
+
+        print(_cogs)
 
     finally:
-        sys.stderr.close()
+        # sys.stderr.close()
+        pass
