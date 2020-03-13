@@ -22,7 +22,7 @@ from frost.server.storage import (
 
 class Auth(Cog, route='authentication'):
 
-    def register(self, send: Callable, data: Dict[str, Any]) -> Union[str, 'Status']:
+    def register(send: Callable, data: Dict[str, Any]) -> Union[str, 'Status']:
         """Registers the a new user with the given data.
 
         :param data: Data received from the client
@@ -63,7 +63,7 @@ class Auth(Cog, route='authentication'):
                 }
             })
 
-    def login(self, send: Callable, data: Dict[str, Any]) -> Dict[str, 'Enum']:
+    def login(send: Callable, data: Dict[str, Any]) -> Dict[str, 'Enum']:
         """Logs in the given user with the given data.
 
         :param data: Data received from the client
@@ -109,7 +109,7 @@ class Auth(Cog, route='authentication'):
 class Msgs(Cog, route='messages'):
 
     @auth_required
-    def send_msg(self, send: Callable, data: Dict[str, Any], token=None, id_=None):
+    def send_msg(send: Callable, data: Dict[str, Any], token=None, id_=None):
         """Saves and stores the message received from a client.
 
         :param data: Data received from a client
@@ -134,7 +134,7 @@ class Msgs(Cog, route='messages'):
         logger.info(f'[ Message ] {username}: {msg}')
 
     def _sort_msgs(
-        self, send: Callable, msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+        msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
     ) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
         """Sorts messages ascending by ID number.
 
@@ -150,7 +150,6 @@ class Msgs(Cog, route='messages'):
 
     @auth_required
     def get_all_msgs(
-        self,
         send: Callable,
         data: Dict[str, Any],
         max_: int = 50,
@@ -185,12 +184,11 @@ class Msgs(Cog, route='messages'):
             'headers': {
                 Header.METHOD.value: Method.ALL_MSG.value
             },
-            'msgs': self._sort_msgs(result)
+            'msgs': Msgs._sort_msgs(result)
         })
 
     @auth_required
     def get_new_msgs(
-        self,
         send: Callable,
         data: Dict[str, Any],
         token: str = None,
@@ -210,11 +208,16 @@ class Msgs(Cog, route='messages'):
         last_ts = data.get('last_msg_timestamp')
 
         if last_ts is None:
-            return self._get_all_msgs(data)
+            return Msgs.get_all_msgs(send, data)
 
         msgs = Message.entries()
         rev_entries = reversed(list(msgs.items()))
-        contents = {'headers': {Header.METHOD.value: Method.NEW_MSG.value}}
+        contents = {
+            'headers': {
+                Header.METHOD.value: Method.NEW_MSG.value
+            },
+            'msgs': {}
+        }
 
         last_ts = datetime.strptime(last_ts, r'%Y-%m-%d %H:%M:%S.%f')
         results = dict()
@@ -235,30 +238,9 @@ class Msgs(Cog, route='messages'):
 
         if len(results) > 0:
             logger.info(f'User ID: {id_} requested {len(results)} messages')
-            contents['msgs'] = self._sort_msgs(results)
+            contents['msgs'] = Msgs._sort_msgs(results)
 
         send(contents)
-
-# METHODS: Dict[int, Callable] = {
-#     Method.REGISTER.value: _register,
-#     Method.LOGIN.value: _login,
-#     Method.SEND_MSG.value: _send_msg,
-#     Method.GET_ALL_MSG.value: _get_all_msgs,
-#     Method.GET_NEW_MSG.value: _get_new_msgs
-# }
-
-
-# def exec_method(item: Any, data: Dict[Any, Any]) -> Any:
-#     """Executes the method specified in the :code:`data` headers.
-
-#     :param item: The specific method to execute
-#     :type item: Any
-#     :param data: Data received from the server
-#     :type data: Dict[Any, Any]
-#     :return: The data the specific method returned
-#     :rtype: Any
-#     """
-#     return METHODS[item](data)
 
 Auth()
 Msgs()

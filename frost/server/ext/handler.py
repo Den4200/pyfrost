@@ -9,7 +9,8 @@ class Handler:
     def __init__(self, send: Callable) -> None:
         self.send = send
 
-    def _handle_path(self, path: str) -> None:
+    @staticmethod
+    def _handle_path(path: str) -> None:
         parts = Path(path).parts
 
         result = _cogs

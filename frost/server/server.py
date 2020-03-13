@@ -5,6 +5,7 @@ import struct
 import socket
 import json
 
+import frost.server.methods  # NOQA: F401
 from frost.server.room import Room
 from frost.server.ext import Handler
 from frost.server.socketio import BaseServer, threaded
