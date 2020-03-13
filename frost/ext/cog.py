@@ -23,7 +23,7 @@ class Cog:
             _cogs.update({
                 route: {
                     k: v for k, v in members
-                    if not any((k.startswith('_'), k.startswith('__'), k == 'route'))
+                    if not k.startswith('_') and k != 'route'
                 }
             })
             return self

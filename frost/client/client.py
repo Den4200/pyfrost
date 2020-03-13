@@ -2,7 +2,7 @@ from typing import Any, Dict, Union
 from pathlib import Path
 import json
 
-from frost.client.headers import Header, Method
+from frost.client.headers import Header
 from frost.client.methods import exec_method
 from frost.client.socketio import BaseClient
 from frost.client.auth import get_auth

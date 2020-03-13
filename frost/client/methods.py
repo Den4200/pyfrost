@@ -1,7 +1,17 @@
 from typing import Any, Callable, Dict, Union
 import json
 
+from frost.ext import Cog
 from frost.client.headers import Header, Method, Status
+
+
+class Auth(Cog, route='authentication'):
+
+    def post_register(data: Dict[str, Any]) -> None:
+        pass
+
+    def post_login(data: Dict[str, Any]) -> None:
+        pass
 
 
 def _store_data(key: str, data: Dict[Any, Any]) -> Any:
@@ -87,7 +97,7 @@ def _all_msgs(data: Dict[Any, Any]) -> Dict[str, Dict[str, Union[str, Dict[str, 
     return msgs
 
 
-def _post_register(data: Dict[Any, Any]) -> int:
+def _post_register(data: Dict[str, Any]) -> int:
     return data['headers'][Header.STATUS.value]
 
 
