@@ -8,7 +8,7 @@ from werkzeug.security import (
     check_password_hash
 )
 
-from frost.server.ext import Cog
+from frost.ext import Cog
 from frost.server.logger import logger
 from frost.server.auth import auth_required
 from frost.server.headers import Header, Method, Status

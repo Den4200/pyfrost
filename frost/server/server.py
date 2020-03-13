@@ -5,8 +5,8 @@ import struct
 import socket
 import json
 
+from frost.ext import Handler
 from frost.server.room import Room
-from frost.server.ext import Handler
 from frost.server.methods import Auth, Msgs
 from frost.server.socketio import BaseServer, threaded
 from frost.server.storage.defaults import DEFAULT_FORMAT

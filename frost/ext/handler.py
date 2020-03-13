@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict
 from pathlib import Path
 
-from frost.server.ext.cog import _cogs
+from frost.ext.cog import _cogs
 
 
 class Handler:

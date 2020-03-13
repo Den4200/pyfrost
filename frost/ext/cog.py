@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from frost.server.ext.exceptions import DirectCogInstance
+from frost.ext.exceptions import DirectCogInstanceError
 
 
 _cogs = dict()
@@ -15,7 +15,7 @@ class Cog:
             route = cls.route
 
         except AttributeError:
-            raise DirectCogInstance(
+            raise DirectCogInstanceError(
                 'The Cog class cannot be directly instantiated. It must be subclassed.'
             ) from None
 

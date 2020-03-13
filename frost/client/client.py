@@ -67,7 +67,6 @@ class FrostClient(BaseClient):
         """
         self.send({
             'headers': {
-                Header.METHOD.value: Method.LOGIN.value,
                 'path': 'authentication/login'
             },
             'username': username,
@@ -85,7 +84,6 @@ class FrostClient(BaseClient):
         """
         self.send({
             'headers': {
-                Header.METHOD.value: Method.REGISTER.value,
                 'path': 'authentication/register'
             },
             'username': username,
@@ -106,7 +104,6 @@ class FrostClient(BaseClient):
         """
         self.send({
             'headers': {
-                Header.METHOD.value: Method.SEND_MSG.value,
                 Header.AUTH_TOKEN.value: token,
                 Header.ID_TOKEN.value: id_,
                 'path': 'messages/send_msg'
@@ -131,7 +128,6 @@ class FrostClient(BaseClient):
         """
         self.send({
             'headers': {
-                Header.METHOD.value: Method.GET_ALL_MSG.value,
                 Header.AUTH_TOKEN.value: token,
                 Header.ID_TOKEN.value: id_,
                 'path': 'messages/get_all_msgs'
@@ -159,7 +155,6 @@ class FrostClient(BaseClient):
 
         self.send({
             'headers': {
-                Header.METHOD.value: Method.GET_NEW_MSG.value,
                 Header.AUTH_TOKEN.value: token,
                 Header.ID_TOKEN.value: id_,
                 'path': 'messages/get_new_msgs'
