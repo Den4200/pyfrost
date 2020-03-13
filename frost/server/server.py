@@ -6,10 +6,17 @@ import socket
 import json
 
 from frost.server.room import Room
-from frost.server.methods import exec_method
+from frost.server.ext import Handler
 from frost.server.socketio import BaseServer, threaded
-from frost.server.headers import Header, Method, Status
 from frost.server.storage.defaults import DEFAULT_FORMAT
+
+
+def send_partial(send_func: Callable, conn: 'socket.socket') -> Callable:
+
+    def execute(*args: Any, **kwargs: Any) -> Any:
+        return send_func(conn, *args, **kwargs)
+
+    return execute
 
 
 class FrostServer(BaseServer):
@@ -62,6 +69,8 @@ class FrostServer(BaseServer):
         :param addr: The user's IP address and port
         :type addr: Tuple[str, int]
         """
+        handler = Handler(send_partial(self.send, conn))
+
         while True:
             try:
                 data = self.recieve(conn)
@@ -70,55 +79,7 @@ class FrostServer(BaseServer):
                 break
 
             else:
-                headers = data['headers']
-                method = headers[Header.METHOD.value]
-
-                resp = exec_method(method, data)
-
-                if method == Method.LOGIN.value:
-                    self.send(conn, {
-                        'headers': {
-                            Header.METHOD.value: Method.NEW_TOKEN.value,
-                            Header.STATUS.value: resp['status']
-                        },
-                        'auth_token': resp.get('token'),
-                        'id': resp.get('id')
-                    })
-
-                elif method == Method.REGISTER.value:
-
-                    if resp == Status.DUPLICATE_USERNAME:
-                        content = {
-                            'headers': {
-                                Header.METHOD.value: Method.POST_REGISTER.value,
-                                Header.STATUS.value: resp.value
-                            }
-                        }
-                    else:
-                        content = {
-                            'headers': {
-                                Header.METHOD.value: Method.POST_REGISTER.value,
-                                Header.STATUS.value: Status.SUCCESS.value
-                            }
-                        }
-
-                    self.send(conn, content)
-
-                elif method == Method.GET_ALL_MSG.value:
-                    self.send(conn, {
-                        'headers': {
-                            Header.METHOD.value: Method.ALL_MSG.value
-                        },
-                        'msgs': resp
-                    })
-
-                elif method == Method.GET_NEW_MSG.value:
-                    self.send(conn, {
-                        'headers': {
-                            Header.METHOD.value: Method.NEW_MSG.value
-                        },
-                        'msgs': resp
-                    })
+                handler.handle(data)
 
     def run(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """Runs the FrostServer.

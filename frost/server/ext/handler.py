@@ -1,10 +1,13 @@
-from typing import Any
+from typing import Any, Callable, Dict
 from pathlib import Path
 
 from frost.server.ext.cog import _cogs
 
 
 class Handler:
+
+    def __init__(self, send: Callable) -> None:
+        self.send = send
 
     def _handle_path(self, path: str) -> None:
         parts = Path(path).parts
@@ -15,6 +18,5 @@ class Handler:
 
         return result
 
-    def handle(self, path: str, data: Any) -> None:
-        method = self._handle_path(path)
-        return method(data)
+    def handle(self, data: Dict[str, Any]) -> None:
+        return self._handle_path(data['headers']['path'])(self.send, data)
