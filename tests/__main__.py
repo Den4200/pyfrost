@@ -29,5 +29,4 @@ if __name__ == "__main__":
         main()
 
     finally:
-        # sys.stderr.close()
-        pass
+        sys.stderr.close()

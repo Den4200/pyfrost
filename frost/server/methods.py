@@ -241,6 +241,3 @@ class Msgs(Cog, route='messages'):
             contents['msgs'] = Msgs._sort_msgs(results)
 
         send(contents)
-
-Auth()
-Msgs()

@@ -5,9 +5,9 @@ import struct
 import socket
 import json
 
-import frost.server.methods  # NOQA: F401
 from frost.server.room import Room
 from frost.server.ext import Handler
+from frost.server.methods import Auth, Msgs
 from frost.server.socketio import BaseServer, threaded
 from frost.server.storage.defaults import DEFAULT_FORMAT
 
@@ -29,6 +29,10 @@ class FrostServer(BaseServer):
 
     def __init__(self, file: str) -> None:
         super(FrostServer, self).__init__()
+
+        Auth()
+        Msgs()
+
         path = Path(file)
 
         self._name = path.name
