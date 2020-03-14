@@ -161,7 +161,7 @@ class Msgs(Cog, route='messages'):
         data: Dict[str, Any],
         token: str,
         id_: str,
-        max_: int = 50,
+        max_: int = 250,
     ) -> None:
         """Gets up to :code:`max_` past messages.
 
