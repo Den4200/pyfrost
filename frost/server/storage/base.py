@@ -1,6 +1,8 @@
 from typing import Any, Dict, Optional
 import json
 
+from frost.server.storage.exceptions import DuplicateValueError
+
 
 class Base:
     """The base model for data storage.
@@ -91,7 +93,7 @@ class Base:
 
                             if val[k] == str(v.data) and key != id_:
                                 commit = False
-                                raise ValueError(
+                                raise DuplicateValueError(
                                     f'{v.data} already exists in {k}'
                                 )
 
