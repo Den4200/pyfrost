@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable, Dict, Union
 from datetime import datetime
 from enum import Enum  # NOQA: F401
 import secrets
@@ -21,14 +21,16 @@ from frost.server.storage import (
 
 
 class Auth(Cog, route='authentication'):
+    """Deals with user authentication. :code:`route='authentication'`
+    """
 
-    def register(send: Callable, data: Dict[str, Any]) -> Union[str, 'Status']:
+    def register(send: Callable, data: Dict[str, Any]) -> None:
         """Registers the a new user with the given data.
 
+        :param send: The function to send data back to the client
+        :type send: Callable
         :param data: Data received from the client
         :type data: Dict[str, Any]
-        :return: The newly created user's ID
-        :rtype: str
         """
         username = data['username']
         password = generate_password_hash(
@@ -44,7 +46,7 @@ class Auth(Cog, route='authentication'):
             )
 
         except DuplicateValueError:
-            logger.debug(
+            logger.info(
                 f'User tried to register for an already existing username: {username}'
             )
             send({
@@ -63,13 +65,13 @@ class Auth(Cog, route='authentication'):
                 }
             })
 
-    def login(send: Callable, data: Dict[str, Any]) -> Dict[str, 'Enum']:
+    def login(send: Callable, data: Dict[str, Any]) -> None:
         """Logs in the given user with the given data.
 
+        :param send: The function to send data back to the client
+        :type send: Callable
         :param data: Data received from the client
         :type data: Dict[str, Any]
-        :return: The user's ID, newly generated token, and status OR just the status
-        :rtype: Dict[str, 'Enum']
         """
         username = data['username']
         password = data['password']
@@ -89,7 +91,7 @@ class Auth(Cog, route='authentication'):
                 logger.info(f'User logged in: {username}')
 
                 Base.commit(contents)
-                return send({
+                send({
                     'headers': {
                         Header.METHOD.value: Method.NEW_TOKEN.value,
                         Header.STATUS.value: Status.SUCCESS.value
@@ -97,8 +99,9 @@ class Auth(Cog, route='authentication'):
                     'auth_token': token,
                     'id': id_
                 })
+                return
 
-        return send({
+        send({
             'headers': {
                 Header.METHOD.value: Method.NEW_TOKEN.value,
                 Header.STATUS.value: Status.INVALID_AUTH.value
@@ -107,17 +110,21 @@ class Auth(Cog, route='authentication'):
 
 
 class Msgs(Cog, route='messages'):
+    """Deals with user messages. :code:`route='messages'`
+    """
 
     @auth_required
-    def send_msg(send: Callable, data: Dict[str, Any], token=None, id_=None):
+    def send_msg(send: Callable, data: Dict[str, Any], token: str, id_: str) -> None:
         """Saves and stores the message received from a client.
 
+        :param send: The function to send data back to the client
+        :type send: Callable
         :param data: Data received from a client
         :type data: Dict[str, Any]
         :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
-        :type token: str, optional
+        :type token: str
         :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
-        :type id_: str, optional
+        :type id_: str
         """
         msg = data['msg']
         user = User.search(id_)
@@ -152,22 +159,22 @@ class Msgs(Cog, route='messages'):
     def get_all_msgs(
         send: Callable,
         data: Dict[str, Any],
+        token: str,
+        id_: str,
         max_: int = 50,
-        token: str = None,
-        id_: str = None
-    ) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
+    ) -> None:
         """Gets up to :code:`max_` past messages.
 
+        :param send: The function to send data back to the client
+        :type send: Callable
         :param data: Data received from the client
         :type data: Dict[str, Any]
         :param max_: The maximum number of messages to get, defaults to 50
         :type max_: int, optional
         :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
-        :type token: str, optional
+        :type token: str
         :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
-        :type id_: str, optional
-        :return: Past messages
-        :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+        :type id_: str
         """
         msgs = Message.entries()
         rev_entries = reversed(list(msgs))
@@ -191,19 +198,19 @@ class Msgs(Cog, route='messages'):
     def get_new_msgs(
         send: Callable,
         data: Dict[str, Any],
-        token: str = None,
-        id_: str = None
-    ) -> Optional[Dict[str, Dict[str, Union[str, Dict[str, str]]]]]:
+        token: str,
+        id_: str
+    ) -> None:
         """Gets all new messages for a client.
 
+        :param send: The function to send data back to the client
+        :type send: Callable
         :param data: Data received from the client
         :type data: Dict[str, Any]
         :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
-        :type token: str, optional
+        :type token: str
         :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
-        :type id_: str, optional
-        :return: New messages
-        :rtype: Optional[Dict[str, Dict[str, Union[str, Dict[str, str]]]]]
+        :type id_: str
         """
         last_ts = data.get('last_msg_timestamp')
 

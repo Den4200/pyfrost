@@ -13,6 +13,16 @@ from frost.server.storage.defaults import DEFAULT_FORMAT
 
 
 def send_partial(send_func: Callable, conn: 'socket.socket') -> Callable:
+    """A partial function to auto fill the :code:`conn` parameter of \
+    :meth:`frost.server.socketio.base_server.BaseServer`
+
+    :param send_func: The send function that sends data to the client
+    :type send_func: Callable
+    :param conn: A specific client's connection
+    :type conn: socket.socket
+    :return: The inner execute function
+    :rtype: Callable
+    """
 
     def execute(*args: Any, **kwargs: Any) -> Any:
         return send_func(conn, *args, **kwargs)
@@ -30,6 +40,7 @@ class FrostServer(BaseServer):
     def __init__(self, file: str) -> None:
         super(FrostServer, self).__init__()
 
+        # Load up the cogs
         Auth()
         Msgs()
 

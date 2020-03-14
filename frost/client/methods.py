@@ -1,17 +1,7 @@
 from typing import Any, Callable, Dict, Union
 import json
 
-from frost.ext import Cog
 from frost.client.headers import Header, Method, Status
-
-
-class Auth(Cog, route='authentication'):
-
-    def post_register(data: Dict[str, Any]) -> None:
-        pass
-
-    def post_login(data: Dict[str, Any]) -> None:
-        pass
 
 
 def _store_data(key: str, data: Dict[Any, Any]) -> Any:
