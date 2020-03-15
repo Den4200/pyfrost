@@ -2,27 +2,16 @@ from dataclasses import dataclass
 
 from frost import FrostClient
 from frost.client import Status, threaded
-
-
-@dataclass
-class Messages:
-    contents = dict()
-
-
-# Store messages in memory globally
-messages = Messages()
+from frost.client.events import messages
 
 
 @threaded(daemon=True)
 def listen(client: 'FrostClient') -> None:
     while True:
-        msgs = client.get_new_msgs()
+        msgs = messages.get_new_msgs()
 
         if msgs:
-            for msg_id, msg in msgs.items():
-                messages.contents[msg_id] = msg
-
-            print(messages.contents)
+            print(msgs)
 
 
 @threaded()

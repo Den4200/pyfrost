@@ -2,10 +2,12 @@ from typing import Any, Dict, Union
 from pathlib import Path
 import json
 
+from frost.ext import Handler
+from frost.client.events import Msgs
+from frost.client.auth import get_auth
 from frost.client.headers import Header
 from frost.client.methods import exec_method
-from frost.client.socketio import BaseClient
-from frost.client.auth import get_auth
+from frost.client.socketio import BaseClient, threaded
 
 
 class FrostClient(BaseClient):
@@ -21,6 +23,9 @@ class FrostClient(BaseClient):
         """The constructor method.
         """
         super(FrostClient, self).__init__(ip, port)
+
+        # Load up cogs
+        Msgs()
 
         frost_file = Path('.frost')
 
@@ -41,6 +46,18 @@ class FrostClient(BaseClient):
         """The __exit__ method, closes the connection to the server.
         """
         self.close()
+
+    def connect(self):
+        super().connect()
+        self.listen()
+
+    @threaded(daemon=True)
+    def listen(self):
+        handler = Handler()
+
+        while True:
+            data = self.recieve()
+            handler.handle(data)
 
     def recieve(self) -> Any:
         """Receive data from the server and execute the specified method in the response headers.
