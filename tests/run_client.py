@@ -34,12 +34,13 @@ def run_client():
     #         input('Register Password: ')
     #     )
 
-    # login = None
-    # while login in (Status.INVALID_AUTH.value, None):
-    client.login(
-        input('Username: '),
-        input('Password: ')
-    )
+    login = None
+    while login in (Status.INVALID_AUTH.value, None):
+        login = client.login(
+            input('Username: '),
+            input('Password: ')
+        )
+        print(login)
 
     send_msg(client)
     check_msgs()

@@ -3,10 +3,15 @@ from pathlib import Path
 import json
 
 from frost.ext import Handler
-from frost.client.events import Auth, Msgs
 from frost.client.auth import get_auth
 from frost.client.headers import Header
 from frost.client.socketio import BaseClient, threaded
+from frost.client.events import (
+    Auth,
+    Msgs,
+    login_status,
+    register_status
+)
 
 
 class FrostClient(BaseClient):
@@ -88,8 +93,7 @@ class FrostClient(BaseClient):
             'username': username,
             'password': password
         })
-        # super().recieve()
-        # return self.recieve()
+        return login_status.get_status()
 
     def register(self, username: str, password: str) -> None:
         """Register an account on the server.
@@ -106,7 +110,7 @@ class FrostClient(BaseClient):
             'username': username,
             'password': password
         })
-        # return self.recieve()
+        return register_status.get_status()
 
     @get_auth
     def send_msg(self, msg: str, token: str, id_: str) -> None:
