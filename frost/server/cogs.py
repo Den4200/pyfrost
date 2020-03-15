@@ -1,7 +1,8 @@
-from typing import Any, Callable, Dict, Union
+from typing import Any, Dict, Union
 from datetime import datetime
 from enum import Enum  # NOQA: F401
 import secrets
+import socket  # NOQA: F401
 
 from werkzeug.security import (
     generate_password_hash,
@@ -24,7 +25,7 @@ class Auth(Cog, route='authentication'):
     """Deals with user authentication. :code:`route='authentication'`
     """
 
-    def register(send: Callable, data: Dict[str, Any]) -> None:
+    def register(data: Dict[str, Any], **kwargs: Any) -> None:
         """Registers the a new user with the given data.
 
         :param send: The function to send data back to the client
@@ -49,23 +50,25 @@ class Auth(Cog, route='authentication'):
             logger.info(
                 f'User tried to register for an already existing username: {username}'
             )
-            send({
+            kwargs['client_send']({
                 'headers': {
-                    Header.METHOD.value: Method.POST_REGISTER.value,
-                    Header.STATUS.value: Status.DUPLICATE_USERNAME.value
+                    # Header.METHOD.value: Method.POST_REGISTER.value,
+                    'path': 'authentication/post_register',
+                    'status': Status.DUPLICATE_USERNAME.value
                 }
             })
 
         else:
             logger.info(f'New user registered: {username}')
-            send({
+            kwargs['client_send']({
                 'headers': {
-                    Header.METHOD.value: Method.POST_REGISTER.value,
-                    Header.STATUS.value: Status.SUCCESS.value
+                    # Header.METHOD.value: Method.POST_REGISTER.value,
+                    'path': 'authentication/post_register',
+                    'status': Status.SUCCESS.value
                 }
             })
 
-    def login(send: Callable, data: Dict[str, Any]) -> None:
+    def login(data: Dict[str, Any], **kwargs: Any) -> None:
         """Logs in the given user with the given data.
 
         :param send: The function to send data back to the client
@@ -91,20 +94,29 @@ class Auth(Cog, route='authentication'):
                 logger.info(f'User logged in: {username}')
 
                 Base.commit(contents)
-                send({
+                kwargs['client_send']({
                     'headers': {
-                        Header.METHOD.value: Method.NEW_TOKEN.value,
-                        Header.STATUS.value: Status.SUCCESS.value
+                        # Header.METHOD.value: Method.NEW_TOKEN.value,
+                        'path': 'authentication/post_login',
+                        'status': Status.SUCCESS.value
                     },
                     'auth_token': token,
                     'id': id_
                 })
+                msgs = Message.entries().items()
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'messages/new'
+                    },
+                    'msg': {msg_id: msg for msg_id, msg in msgs if msg_id != 'meta'}
+                })
                 return
 
-        send({
+        kwargs['client_send']({
             'headers': {
-                Header.METHOD.value: Method.NEW_TOKEN.value,
-                Header.STATUS.value: Status.INVALID_AUTH.value
+                # Header.METHOD.value: Method.NEW_TOKEN.value,
+                'path': 'authentication/post_login',
+                'status': Status.INVALID_AUTH.value
             }
         })
 
@@ -114,7 +126,12 @@ class Msgs(Cog, route='messages'):
     """
 
     @auth_required
-    def send_msg(send: Callable, data: Dict[str, Any], token: str, id_: str) -> None:
+    def send_msg(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        **kwargs: Any
+    ) -> None:
         """Saves and stores the message received from a client.
 
         :param send: The function to send data back to the client
@@ -131,12 +148,25 @@ class Msgs(Cog, route='messages'):
         username = user['username']
         timestamp = str(datetime.now())
 
-        Message.add(
+        msg_id = Message.add(
             Message(msg, timestamp, {
                 'username': username,
                 'id': id_
             })
         )
+
+        send = kwargs['send']
+        conns = kwargs['users'].values()
+
+        for conn in conns:
+            send(conn, {
+                'headers': {
+                    'path': 'messages/new'
+                },
+                'msg': {
+                    msg_id: Message.search(msg_id)
+                }
+            })
 
         logger.info(f'[ Message ] {username}: {msg}')
 
@@ -157,11 +187,11 @@ class Msgs(Cog, route='messages'):
 
     @auth_required
     def get_all_msgs(
-        send: Callable,
         data: Dict[str, Any],
         token: str,
         id_: str,
         max_: int = 250,
+        **kwargs: Any
     ) -> None:
         """Gets up to :code:`max_` past messages.
 
@@ -187,7 +217,7 @@ class Msgs(Cog, route='messages'):
                 break
 
         logger.info(f'User ID: {id_} requested {len(result) - 1} messages')
-        send({
+        kwargs['client_send']({
             'headers': {
                 Header.METHOD.value: Method.ALL_MSG.value
             },
@@ -196,10 +226,10 @@ class Msgs(Cog, route='messages'):
 
     @auth_required
     def get_new_msgs(
-        send: Callable,
         data: Dict[str, Any],
         token: str,
-        id_: str
+        id_: str,
+        **kwargs: Any
     ) -> None:
         """Gets all new messages for a client.
 
@@ -215,7 +245,7 @@ class Msgs(Cog, route='messages'):
         last_ts = data.get('last_msg_timestamp')
 
         if last_ts is None:
-            return Msgs.get_all_msgs(send, data)
+            return Msgs.get_all_msgs(data, **kwargs)
 
         msgs = Message.entries()
         rev_entries = reversed(list(msgs.items()))
@@ -247,4 +277,4 @@ class Msgs(Cog, route='messages'):
             logger.info(f'User ID: {id_} requested {len(results)} messages')
             contents['msgs'] = Msgs._sort_msgs(results)
 
-        send(contents)
+        kwargs['client_send'](contents)

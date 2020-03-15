@@ -47,7 +47,7 @@ class Base:
                 data
             )
 
-        return id_
+        return str(id_)
 
     @classmethod
     def update(cls, item: Any) -> None:

@@ -1,17 +1,19 @@
-from dataclasses import dataclass
+import time
 
 from frost import FrostClient
-from frost.client import Status, threaded
+from frost.client import Status, threaded  # NOQA: F401
 from frost.client.events import messages
 
 
 @threaded(daemon=True)
-def listen(client: 'FrostClient') -> None:
+def check_msgs() -> None:
     while True:
         msgs = messages.get_new_msgs()
 
         if msgs:
-            print(msgs)
+            print(messages.all_messages)
+
+        time.sleep(0.25)
 
 
 @threaded()
@@ -22,7 +24,6 @@ def send_msg(client: 'FrostClient'):
 
 
 def run_client():
-    # with FrostClient() as client:
     client = FrostClient()
     client.connect()
 
@@ -33,18 +34,14 @@ def run_client():
     #         input('Register Password: ')
     #     )
 
-    login = None
-    while login in (Status.INVALID_AUTH.value, None):
-        login = client.login(
-            input('Username: '),
-            input('Password: ')
-        )
+    # login = None
+    # while login in (Status.INVALID_AUTH.value, None):
+    client.login(
+        input('Username: '),
+        input('Password: ')
+    )
 
-    msgs = client.get_all_msgs()
-    messages.contents = msgs
-    print(msgs)
-
-    listen(client)
     send_msg(client)
+    check_msgs()
 
     # client.close()
