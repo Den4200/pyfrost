@@ -1,9 +1,6 @@
 frost.server.database package
 =============================
 
-.. warning::
-   Everything within this subpackage has not yet been implemented.
-
 Subpackages
 -----------
 

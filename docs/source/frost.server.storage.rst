@@ -12,6 +12,22 @@ frost.server.storage.base module
    :undoc-members:
    :show-inheritance:
 
+frost.server.storage.defaults module
+------------------------------------
+
+.. automodule:: frost.server.storage.defaults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+frost.server.storage.exceptions module
+--------------------------------------
+
+.. automodule:: frost.server.storage.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 frost.server.storage.models module
 ----------------------------------
 

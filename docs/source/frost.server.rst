@@ -21,6 +21,14 @@ frost.server.auth module
    :undoc-members:
    :show-inheritance:
 
+frost.server.cogs module
+------------------------
+
+.. automodule:: frost.server.cogs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 frost.server.exceptions module
 ------------------------------
 
@@ -41,14 +49,6 @@ frost.server.logger module
 --------------------------
 
 .. automodule:: frost.server.logger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-frost.server.methods module
----------------------------
-
-.. automodule:: frost.server.methods
    :members:
    :undoc-members:
    :show-inheritance:
