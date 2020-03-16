@@ -1,12 +1,12 @@
-from typing import Any, Callable, Tuple
+import json
+import socket
 from functools import wraps
 from pathlib import Path
-import socket
-import json
+from typing import Any, Callable, Tuple
 
 from frost.ext import Handler
-from frost.server.room import Room
 from frost.server.cogs import Auth, Msgs
+from frost.server.room import Room
 from frost.server.socketio import BaseServer, threaded
 from frost.server.storage.defaults import DEFAULT_FORMAT
 

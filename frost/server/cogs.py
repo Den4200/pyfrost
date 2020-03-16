@@ -1,22 +1,17 @@
-from typing import Any, Dict, Union
-from datetime import datetime
 import secrets
+from datetime import datetime
+from typing import Any, Dict, Union
 
 from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
+    check_password_hash,
+    generate_password_hash
 )
 
 from frost.ext import Cog
-from frost.server.logger import logger
 from frost.server.auth import auth_required
 from frost.server.headers import Status
-from frost.server.storage import (
-    Base,
-    User,
-    Message,
-    DuplicateValueError
-)
+from frost.server.logger import logger
+from frost.server.storage import Base, DuplicateValueError, Message, User
 
 
 class Auth(Cog, route='authentication'):

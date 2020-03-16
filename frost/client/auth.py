@@ -1,6 +1,6 @@
-from typing import Callable, Optional
-import json
 import functools
+import json
+from typing import Callable, Optional
 
 
 @functools.lru_cache()

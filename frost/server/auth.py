@@ -1,8 +1,8 @@
-from typing import Callable
 from functools import wraps
+from typing import Callable
 
-from frost.server.storage import User
 from frost.server.headers import Status
+from frost.server.storage import User
 
 
 def auth_required(func: Callable) -> Callable:

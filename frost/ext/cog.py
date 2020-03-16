@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from frost.ext.exceptions import DirectCogInstanceError
 
-
 _cogs = dict()
 
 

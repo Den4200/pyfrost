@@ -1,8 +1,7 @@
-from typing import Any
-
 import pickle
 import socket
 import struct
+from typing import Any
 
 
 class BaseClient:

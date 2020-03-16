@@ -5,7 +5,6 @@ from frost.client.events.events import (
     register_status
 )
 
-
 __all__ = (
     'Auth',
     'Msgs',

@@ -1,6 +1,6 @@
-from typing import Any, Callable
-from threading import Thread
 from functools import wraps
+from threading import Thread
+from typing import Any, Callable
 
 
 class threaded:

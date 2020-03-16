@@ -1,9 +1,7 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
-from frost.ext import Handler
 from frost.client.auth import get_auth
-from frost.client.socketio import BaseClient, threaded
 from frost.client.events import (
     Auth,
     Msgs,
@@ -11,6 +9,8 @@ from frost.client.events import (
     login_status,
     register_status
 )
+from frost.client.socketio import BaseClient, threaded
+from frost.ext import Handler
 
 
 class FrostClient(BaseClient):

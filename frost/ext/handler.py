@@ -1,5 +1,5 @@
-from typing import Any, Callable, Dict
 from pathlib import Path
+from typing import Any, Callable, Dict
 
 from frost.ext.cog import _cogs
 

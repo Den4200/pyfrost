@@ -1,5 +1,5 @@
-from typing import Dict, Union
 import time
+from typing import Dict, Union
 
 
 class Messages:

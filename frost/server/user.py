@@ -1,7 +1,7 @@
 import socket  # NOQA: F401
-from typing import Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional, Tuple
 
 
 class Status(Enum):

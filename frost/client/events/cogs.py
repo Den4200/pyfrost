@@ -1,13 +1,9 @@
-from typing import Any, Dict
 import json
+from typing import Any, Dict
 
-from frost.ext import Cog
+from frost.client.events.events import login_status, messages, register_status
 from frost.client.headers import Status
-from frost.client.events.events import (
-    messages,
-    login_status,
-    register_status
-)
+from frost.ext import Cog
 
 
 class Auth(Cog, route='authentication'):
