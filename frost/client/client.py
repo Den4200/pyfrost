@@ -4,7 +4,6 @@ import json
 
 from frost.ext import Handler
 from frost.client.auth import get_auth
-from frost.client.headers import Header
 from frost.client.socketio import BaseClient, threaded
 from frost.client.events import (
     Auth,
@@ -125,8 +124,8 @@ class FrostClient(BaseClient):
         """
         self.send({
             'headers': {
-                Header.AUTH_TOKEN.value: token,
-                Header.ID_TOKEN.value: id_,
+                'token': token,
+                'id': id_,
                 'path': 'messages/send_msg'
             },
             'msg': msg
@@ -154,33 +153,4 @@ class FrostClient(BaseClient):
     #             'path': 'messages/get_all_msgs'
     #         }
     #     })
-    #     return self.recieve()
-
-    # @get_auth
-    # def get_new_msgs(
-    #     self,
-    #     token: str,
-    #     id_: str
-    # ) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
-    #     """Get new, unread messages from the server.
-
-    #     :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
-    #     :type token: str
-    #     :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
-    #     :type id_: str
-    #     :return: New, unread messages
-    #     :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
-    #     """
-    #     with open('.frost', 'r') as f:
-    #         last = json.load(f).get('last_msg_timestamp')
-
-    #     self.send({
-    #         'headers': {
-    #             Header.AUTH_TOKEN.value: token,
-    #             Header.ID_TOKEN.value: id_,
-    #             'path': 'messages/get_new_msgs'
-    #         },
-    #         'last_msg_timestamp': last
-    #     })
-
     #     return self.recieve()

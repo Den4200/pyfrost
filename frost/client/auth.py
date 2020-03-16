@@ -11,7 +11,7 @@ def get_auth_token() -> Optional[str]:
     :rtype: Optional[str]
     """
     with open('.frost', 'r') as f:
-        return json.load(f).get('auth_token')
+        return json.load(f).get('token')
 
 
 @functools.lru_cache()

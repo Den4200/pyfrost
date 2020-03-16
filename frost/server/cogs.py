@@ -1,8 +1,6 @@
 from typing import Any, Dict, Union
 from datetime import datetime
-from enum import Enum  # NOQA: F401
 import secrets
-import socket  # NOQA: F401
 
 from werkzeug.security import (
     generate_password_hash,
@@ -12,7 +10,7 @@ from werkzeug.security import (
 from frost.ext import Cog
 from frost.server.logger import logger
 from frost.server.auth import auth_required
-from frost.server.headers import Header, Method, Status
+from frost.server.headers import Status
 from frost.server.storage import (
     Base,
     User,
@@ -48,11 +46,10 @@ class Auth(Cog, route='authentication'):
 
         except DuplicateValueError:
             logger.info(
-                f'User tried to register for an already existing username: {username}'
+                f'User "{username}" tried to register for an already existing username'
             )
             kwargs['client_send']({
                 'headers': {
-                    # Header.METHOD.value: Method.POST_REGISTER.value,
                     'path': 'authentication/post_register',
                     'status': Status.DUPLICATE_USERNAME.value
                 }
@@ -62,7 +59,6 @@ class Auth(Cog, route='authentication'):
             logger.info(f'New user registered: {username}')
             kwargs['client_send']({
                 'headers': {
-                    # Header.METHOD.value: Method.POST_REGISTER.value,
                     'path': 'authentication/post_register',
                     'status': Status.SUCCESS.value
                 }
@@ -90,35 +86,30 @@ class Auth(Cog, route='authentication'):
             ):
                 token = secrets.token_urlsafe()
                 contents['users'][id_]['token'] = token
-
-                logger.info(f'User logged in: {username}')
-
                 Base.commit(contents)
+
                 kwargs['client_send']({
                     'headers': {
-                        # Header.METHOD.value: Method.NEW_TOKEN.value,
                         'path': 'authentication/post_login',
                         'status': Status.SUCCESS.value
                     },
-                    'auth_token': token,
+                    'token': token,
                     'id': id_
                 })
-                msgs = Message.entries().items()
-                kwargs['client_send']({
-                    'headers': {
-                        'path': 'messages/new'
-                    },
-                    'msg': {msg_id: msg for msg_id, msg in msgs if msg_id != 'meta'}
-                })
+                logger.info(f'User "{username}" logged in')
+
+                Msgs._get_all_msgs(data, token, id_, **kwargs)
+
+                logger.info(f'Sent user "{username}" all messages')
                 return
 
         kwargs['client_send']({
             'headers': {
-                # Header.METHOD.value: Method.NEW_TOKEN.value,
                 'path': 'authentication/post_login',
                 'status': Status.INVALID_AUTH.value
             }
         })
+        logger.info(f'User tried to log in with username: {username}')
 
 
 class Msgs(Cog, route='messages'):
@@ -190,7 +181,7 @@ class Msgs(Cog, route='messages'):
         data: Dict[str, Any],
         token: str,
         id_: str,
-        max_: int = 250,
+        max_: int = 100,
         **kwargs: Any
     ) -> None:
         """Gets up to :code:`max_` past messages.
@@ -206,6 +197,15 @@ class Msgs(Cog, route='messages'):
         :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
         :type id_: str
         """
+        Msgs._get_all_msgs(data, token, id_, max_, **kwargs)
+
+    def _get_all_msgs(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        max_: int = 100,
+        **kwargs: Any
+    ) -> None:
         msgs = Message.entries()
         rev_entries = reversed(list(msgs))
         result = dict()
@@ -213,68 +213,13 @@ class Msgs(Cog, route='messages'):
         for idx, msg_id in enumerate(rev_entries, 1):
             result[msg_id] = msgs[msg_id]
 
-            if msg_id != 'meta' and idx >= max_:
+            if msg_id != 'meta' and idx > max_:
                 break
 
-        logger.info(f'User ID: {id_} requested {len(result) - 1} messages')
+        logger.info(f'User "{User.search(id_)}" requested {len(result) - 1} messages')
         kwargs['client_send']({
             'headers': {
-                Header.METHOD.value: Method.ALL_MSG.value
+                'path': 'messages/new'
             },
-            'msgs': Msgs._sort_msgs(result)
+            'msg': Msgs._sort_msgs(result)
         })
-
-    @auth_required
-    def get_new_msgs(
-        data: Dict[str, Any],
-        token: str,
-        id_: str,
-        **kwargs: Any
-    ) -> None:
-        """Gets all new messages for a client.
-
-        :param send: The function to send data back to the client
-        :type send: Callable
-        :param data: Data received from the client
-        :type data: Dict[str, Any]
-        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
-        :type token: str
-        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
-        :type id_: str
-        """
-        last_ts = data.get('last_msg_timestamp')
-
-        if last_ts is None:
-            return Msgs.get_all_msgs(data, **kwargs)
-
-        msgs = Message.entries()
-        rev_entries = reversed(list(msgs.items()))
-        contents = {
-            'headers': {
-                Header.METHOD.value: Method.NEW_MSG.value
-            },
-            'msgs': {}
-        }
-
-        last_ts = datetime.strptime(last_ts, r'%Y-%m-%d %H:%M:%S.%f')
-        results = dict()
-
-        for msg_id, msg in rev_entries:
-            if msg_id == 'meta':
-                continue
-
-            msg_ts = datetime.strptime(
-                msg['timestamp'],
-                r'%Y-%m-%d %H:%M:%S.%f'
-            )
-
-            if msg_ts > last_ts:
-                results[msg_id] = msg
-            else:
-                break
-
-        if len(results) > 0:
-            logger.info(f'User ID: {id_} requested {len(results)} messages')
-            contents['msgs'] = Msgs._sort_msgs(results)
-
-        kwargs['client_send'](contents)

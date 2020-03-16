@@ -16,55 +16,21 @@ class Auth(Cog, route='authentication'):
         register_status.current_status = data['headers']['status']
 
     def post_login(data: Dict[str, Any]) -> None:
-        Auth._store_token(data)
-        login_status.current_status = data['headers']['status']
+        status = data['headers']['status']
 
-    def _store_data(key: str, data: Dict[Any, Any]) -> Any:
-        """Stores data into the :code:`.frost` file.
+        if status == Status.SUCCESS.value:
+            with open('.frost', 'r') as f:
+                contents = json.load(f)
 
-        :param key: The key of where to find the data to store
-        :type key: str
-        :param data: Data received from the server
-        :type data: Dict[Any, Any]
-        :return: The value of the key in `data`
-        :rtype: Any
-        """
-        value = data[key]
+            contents.update({
+                'id': data['id'],
+                'token': data['token']
+            })
 
-        with open('.frost', 'r') as f:
-            contents = json.load(f)
+            with open('.frost', 'w') as f:
+                json.dump(contents, f, indent=2)
 
-        contents[key] = value
-
-        with open('.frost', 'w') as f:
-            json.dump(contents, f, indent=2)
-
-        return value
-
-    def _store_token(data: Dict[Any, Any]) -> int:
-        """Stores the auth token and ID from :code:`data` in :code:`.frost`.
-
-        :param data: Data received from the server
-        :type data: Dict[Any, Any]
-        :return: The status code received from the server
-        :rtype: int
-        """
-        if data['headers']['status'] == Status.SUCCESS.value:
-            Auth._store_data('auth_token', data)
-            Auth._store_id(data)
-            return Status.SUCCESS.value
-
-        return Status.INVALID_AUTH.value
-
-    def _store_id(data: Dict[Any, Any]) -> str:
-        """Stores the ID from :code:`data` in :code:`.frost`.
-
-        :param data: Data received from the server
-        :type data: Dict[Any, Any]
-        :return: The ID
-        :rtype: str
-        """
-        return Auth._store_data('id', data)
+        login_status.current_status = status
 
 
 class Msgs(Cog, route='messages'):

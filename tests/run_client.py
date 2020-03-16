@@ -40,7 +40,6 @@ def run_client():
             input('Username: '),
             input('Password: ')
         )
-        print(login)
 
     send_msg(client)
     check_msgs()
