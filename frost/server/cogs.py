@@ -124,31 +124,33 @@ class Msgs(Cog, route='messages'):
         :type id_: str
         """
         msg = data['msg']
-        user = User.search(id_)
-        username = user['username']
-        timestamp = str(datetime.now())
 
-        msg_id = Message.add(
-            Message(msg, timestamp, {
-                'username': username,
-                'id': id_
-            })
-        )
+        if msg:
+            user = User.search(id_)
+            username = user['username']
+            timestamp = str(datetime.now())
 
-        send = kwargs['send']
-        conns = kwargs['users'].values()
+            msg_id = Message.add(
+                Message(msg, timestamp, {
+                    'username': username,
+                    'id': id_
+                })
+            )
 
-        for conn in conns:
-            send(conn, {
-                'headers': {
-                    'path': 'messages/new'
-                },
-                'msg': {
-                    msg_id: Message.search(msg_id)
-                }
-            })
+            send = kwargs['send']
+            conns = kwargs['users'].values()
 
-        logger.info(f'[ Message ] {username}: {msg}')
+            for conn in conns:
+                send(conn, {
+                    'headers': {
+                        'path': 'messages/new'
+                    },
+                    'msg': {
+                        msg_id: Message.search(msg_id)
+                    }
+                })
+
+            logger.info(f'[ Message ] {username}: {msg}')
 
     def _sort_msgs(
         msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
