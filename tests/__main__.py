@@ -25,9 +25,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-
-    finally:
-        # sys.stderr.close()
-        pass
+    main()
