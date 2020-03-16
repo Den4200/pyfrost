@@ -20,14 +20,14 @@ class Base:
         return Base._get_table(cls).get(item)
 
     @classmethod
-    def add(cls, item: Any) -> int:
+    def add(cls, item: Any) -> str:
         """Adds an item under the given specific table.
 
         :param item: The item to add
         :type item: Any
         :raises KeyError: If an item under a given ID already exists
         :return: The ID of the given item stored under the given table.
-        :rtype: int
+        :rtype: str
         """
         contents = Base.data()
         table_name = Base._get_table_name(cls)

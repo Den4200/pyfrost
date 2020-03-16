@@ -1,4 +1,3 @@
-from typing import Any
 from pathlib import Path
 import json
 
@@ -8,6 +7,7 @@ from frost.client.socketio import BaseClient, threaded
 from frost.client.events import (
     Auth,
     Msgs,
+    messages,
     login_status,
     register_status
 )
@@ -51,31 +51,22 @@ class FrostClient(BaseClient):
         """
         self.close()
 
-    # def recieve(self) -> Any:
-    #     """Receive data from the server and execute the specified method in the response headers.
-
-    #     :return: Data received from the server
-    #     :rtype: Any
-    #     """
-    #     data = super(FrostClient, self).recieve()
-    #     headers = data['headers']
-    #     method = headers[Header.METHOD.value]
-
-    #     resp = exec_method(method, data)
-    #     return resp
-
     def connect(self) -> None:
+        """Connect to the server and begin listening for events.
+        """
         super().connect()
-        self.listen()
+        self._listen()
 
     @threaded(daemon=True)
-    def listen(self) -> None:
+    def _listen(self) -> None:
+        """Listen for events and handle them.
+        """
         handler = Handler()
 
         while True:
             handler.handle(self.recieve())
 
-    def login(self, username: str, password: str) -> Any:
+    def login(self, username: str, password: str) -> int:
         """Login to the server.
 
         :param username: The username of the account
@@ -94,7 +85,7 @@ class FrostClient(BaseClient):
         })
         return login_status.get_status()
 
-    def register(self, username: str, password: str) -> None:
+    def register(self, username: str, password: str) -> int:
         """Register an account on the server.
 
         :param username: The desired username of the account
@@ -131,26 +122,26 @@ class FrostClient(BaseClient):
             'msg': msg
         })
 
-    # @get_auth
-    # def get_all_msgs(
-    #     self,
-    #     token: str,
-    #     id_: str
-    # ) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
-    #     """Get all messages from the server.
+    @get_auth
+    def get_all_msgs(
+        self,
+        token: str,
+        id_: str
+    ) -> None:
+        """Get all messages from the server. Should not be needed.
 
-    #     :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
-    #     :type token: str
-    #     :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
-    #     :type id_: str
-    #     :return: All messages
-    #     :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
-    #     """
-    #     self.send({
-    #         'headers': {
-    #             Header.AUTH_TOKEN.value: token,
-    #             Header.ID_TOKEN.value: id_,
-    #             'path': 'messages/get_all_msgs'
-    #         }
-    #     })
-    #     return self.recieve()
+        :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
+        :type token: str
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
+        :type id_: str
+        :return: All messages
+        :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+        """
+        messages.clear()
+        self.send({
+            'headers': {
+                'path': 'messages/get_all_msgs',
+                'token': token,
+                'id': id_
+            }
+        })

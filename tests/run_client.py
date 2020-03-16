@@ -44,4 +44,5 @@ def run_client():
     send_msg(client)
     check_msgs()
 
+    # client.get_all_msgs()
     # client.close()

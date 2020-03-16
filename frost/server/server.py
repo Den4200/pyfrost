@@ -66,6 +66,7 @@ class FrostServer(BaseServer):
         raise NotImplementedError
 
         def inner(func) -> Callable:
+
             @wraps(func)
             def execute(*args: Any, **kwargs: Any) -> Any:
                 room = Room(*deco_args, **deco_kwargs)

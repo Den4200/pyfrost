@@ -25,12 +25,10 @@ class Handler:
 
         return result
 
-    def handle(self, data: Dict[str, Any], **kwargs) -> Any:
-        """Handles the route and executes the resulting function.
+    def handle(self, data: Dict[str, Any], **kwargs) -> None:
+        """Handles the route and executes the resulting method.
 
         :param data: Data received from the server
         :type data: Dict[str, Any]
-        :return: Data returned from the executed function
-        :rtype: Any
         """
-        return self._handle_path(data['headers']['path'])(data, **kwargs)
+        self._handle_path(data['headers']['path'])(data, **kwargs)

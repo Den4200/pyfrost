@@ -26,8 +26,6 @@ class Auth(Cog, route='authentication'):
     def register(data: Dict[str, Any], **kwargs: Any) -> None:
         """Registers the a new user with the given data.
 
-        :param send: The function to send data back to the client
-        :type send: Callable
         :param data: Data received from the client
         :type data: Dict[str, Any]
         """
@@ -67,8 +65,6 @@ class Auth(Cog, route='authentication'):
     def login(data: Dict[str, Any], **kwargs: Any) -> None:
         """Logs in the given user with the given data.
 
-        :param send: The function to send data back to the client
-        :type send: Callable
         :param data: Data received from the client
         :type data: Dict[str, Any]
         """
@@ -125,8 +121,6 @@ class Msgs(Cog, route='messages'):
     ) -> None:
         """Saves and stores the message received from a client.
 
-        :param send: The function to send data back to the client
-        :type send: Callable
         :param data: Data received from a client
         :type data: Dict[str, Any]
         :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
@@ -186,8 +180,6 @@ class Msgs(Cog, route='messages'):
     ) -> None:
         """Gets up to :code:`max_` past messages.
 
-        :param send: The function to send data back to the client
-        :type send: Callable
         :param data: Data received from the client
         :type data: Dict[str, Any]
         :param max_: The maximum number of messages to get, defaults to 50
@@ -206,6 +198,17 @@ class Msgs(Cog, route='messages'):
         max_: int = 100,
         **kwargs: Any
     ) -> None:
+        """Gets up to :code:`max_` past messages.
+
+        :param data: Data received from the client
+        :type data: Dict[str, Any]
+        :param max_: The maximum number of messages to get, defaults to 50
+        :type max_: int, optional
+        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
+        :type token: str
+        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
+        :type id_: str
+        """
         msgs = Message.entries()
         rev_entries = reversed(list(msgs))
         result = dict()
@@ -216,7 +219,6 @@ class Msgs(Cog, route='messages'):
             if msg_id != 'meta' and idx > max_:
                 break
 
-        logger.info(f'User "{User.search(id_)}" requested {len(result) - 1} messages')
         kwargs['client_send']({
             'headers': {
                 'path': 'messages/new'
