@@ -1,20 +1,12 @@
-from typing import Any, Callable, Dict, Optional
 from pathlib import Path
+from typing import Any, Callable, Dict
 
 from frost.ext.cog import _cogs
 
 
 class Handler:
     """Handles incoming requests and executes methods according to the route path mapping.
-
-    :param send: Passes the send function over to the method called if given.
-    :type send: Optional[Callable]
     """
-
-    def __init__(self, send: Optional[Callable] = None) -> None:
-        """The constructor method.
-        """
-        self.send = send
 
     @staticmethod
     def _handle_path(path: str) -> Callable:
@@ -33,15 +25,10 @@ class Handler:
 
         return result
 
-    def handle(self, data: Dict[str, Any]) -> Any:
-        """Handles the route and executes the resulting function.
+    def handle(self, data: Dict[str, Any], **kwargs) -> None:
+        """Handles the route and executes the resulting method.
 
         :param data: Data received from the server
         :type data: Dict[str, Any]
-        :return: Data returned from the executed function
-        :rtype: Any
         """
-        if self.send is None:
-            return self._handle_path(data['headers']['path'])(data)
-
-        return self._handle_path(data['headers']['path'])(self.send, data)
+        self._handle_path(data['headers']['path'])(data, **kwargs)

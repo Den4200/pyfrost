@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+   frost.client.events
    frost.client.socketio
 
 Submodules
@@ -31,14 +32,6 @@ frost.client.headers module
 ---------------------------
 
 .. automodule:: frost.client.headers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-frost.client.methods module
----------------------------
-
-.. automodule:: frost.client.methods
    :members:
    :undoc-members:
    :show-inheritance:

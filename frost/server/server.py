@@ -1,13 +1,12 @@
-from typing import Any, Callable, Tuple
+import json
+import socket
 from functools import wraps
 from pathlib import Path
-import struct
-import socket
-import json
+from typing import Any, Callable, Tuple
 
 from frost.ext import Handler
+from frost.server.cogs import Auth, Msgs
 from frost.server.room import Room
-from frost.server.methods import Auth, Msgs
 from frost.server.socketio import BaseServer, threaded
 from frost.server.storage.defaults import DEFAULT_FORMAT
 
@@ -50,6 +49,7 @@ class FrostServer(BaseServer):
         self._dir = path.parent
 
         self._rooms = list()
+        self.users = dict()
 
         self.func = self.on_user_connect
 
@@ -66,6 +66,7 @@ class FrostServer(BaseServer):
         raise NotImplementedError
 
         def inner(func) -> Callable:
+
             @wraps(func)
             def execute(*args: Any, **kwargs: Any) -> Any:
                 room = Room(*deco_args, **deco_kwargs)
@@ -85,17 +86,24 @@ class FrostServer(BaseServer):
         :param addr: The user's IP address and port
         :type addr: Tuple[str, int]
         """
-        handler = Handler(send_partial(self.send, conn))
+        self.users[addr] = conn
+        handler = Handler()
 
         while True:
             try:
                 data = self.recieve(conn)
 
-            except struct.error:
+            except Exception:
+                self.users.pop(addr)
                 break
 
             else:
-                handler.handle(data)
+                handler.handle(
+                    data,
+                    users=self.users,
+                    send=self.send,
+                    client_send=send_partial(self.send, conn)
+                )
 
     def run(self, ip: str = '127.0.0.1', port: int = 5555) -> None:
         """Runs the FrostServer.

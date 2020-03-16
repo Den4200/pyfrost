@@ -1,28 +1,19 @@
-from dataclasses import dataclass
+import time
 
 from frost import FrostClient
-from frost.client import Status, threaded
-
-
-@dataclass
-class Messages:
-    contents = dict()
-
-
-# Store messages in memory globally
-messages = Messages()
+from frost.client import Status, threaded  # NOQA: F401
+from frost.client.events import messages
 
 
 @threaded(daemon=True)
-def listen(client: 'FrostClient') -> None:
+def check_msgs() -> None:
     while True:
-        msgs = client.get_new_msgs()
+        msgs = messages.get_new_msgs()
 
         if msgs:
-            for msg_id, msg in msgs.items():
-                messages.contents[msg_id] = msg
+            print(messages.all_messages)
 
-            print(messages.contents)
+        time.sleep(0.25)
 
 
 @threaded()
@@ -33,7 +24,6 @@ def send_msg(client: 'FrostClient'):
 
 
 def run_client():
-    # with FrostClient() as client:
     client = FrostClient()
     client.connect()
 
@@ -51,11 +41,8 @@ def run_client():
             input('Password: ')
         )
 
-    msgs = client.get_all_msgs()
-    messages.contents = msgs
-    print(msgs)
-
-    listen(client)
     send_msg(client)
+    check_msgs()
 
+    # client.get_all_msgs()
     # client.close()

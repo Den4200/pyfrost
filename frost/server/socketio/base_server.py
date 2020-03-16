@@ -1,17 +1,12 @@
-from typing import (
-    Any,
-    Tuple,
-    Optional,
-    Callable
-)
-import time
 import pickle
 import socket
 import struct
+import time
 from dataclasses import dataclass
+from typing import Any, Callable, Optional, Tuple
 
-from frost.server.socketio.utils import threaded
 from frost.server.logger import logger
+from frost.server.socketio.utils import threaded
 
 
 @dataclass

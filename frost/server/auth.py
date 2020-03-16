@@ -1,9 +1,8 @@
-from typing import Callable
 from functools import wraps
+from typing import Callable
 
-from frost.server.headers import Header
-from frost.server.storage import User
 from frost.server.headers import Status
+from frost.server.storage import User
 
 
 def auth_required(func: Callable) -> Callable:
@@ -18,8 +17,8 @@ def auth_required(func: Callable) -> Callable:
     """
     @wraps(func)
     def execute(*args, **kwargs):
-        id_ = args[1]['headers'].get(Header.ID_TOKEN.value)
-        token = args[1]['headers'].get(Header.AUTH_TOKEN.value)
+        id_ = args[0]['headers'].get('id')
+        token = args[0]['headers'].get('token')
 
         if id_ is not None and token is not None:
             user = User.search(id_)

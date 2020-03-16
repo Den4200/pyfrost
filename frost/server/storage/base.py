@@ -1,5 +1,5 @@
-from typing import Any, Dict, Optional
 import json
+from typing import Any, Dict, Optional
 
 from frost.server.storage.exceptions import DuplicateValueError
 
@@ -20,14 +20,14 @@ class Base:
         return Base._get_table(cls).get(item)
 
     @classmethod
-    def add(cls, item: Any) -> int:
+    def add(cls, item: Any) -> str:
         """Adds an item under the given specific table.
 
         :param item: The item to add
         :type item: Any
         :raises KeyError: If an item under a given ID already exists
         :return: The ID of the given item stored under the given table.
-        :rtype: int
+        :rtype: str
         """
         contents = Base.data()
         table_name = Base._get_table_name(cls)
@@ -47,7 +47,7 @@ class Base:
                 data
             )
 
-        return id_
+        return str(id_)
 
     @classmethod
     def update(cls, item: Any) -> None:
