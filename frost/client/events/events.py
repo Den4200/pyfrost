@@ -1,4 +1,3 @@
-import time
 from typing import Dict, Union
 
 
@@ -54,13 +53,11 @@ class AuthStatus:
         :return: The current authentication status
         :rtype: int
         """
-        while self.current_status is None:
-            time.sleep(0.25)
-
-        try:
-            return self.current_status
-        finally:
-            self.current_status = None
+        if self.current_status is not None:
+            try:
+                return self.current_status
+            finally:
+                self.current_status = None
 
 
 messages = Messages()
