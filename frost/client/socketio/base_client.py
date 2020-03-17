@@ -1,4 +1,4 @@
-import pickle
+import json
 import socket
 import struct
 from typing import Any
@@ -50,7 +50,7 @@ class BaseClient:
         while len(result) < size:
             result += self._socket.recv(size - len(result))
 
-        return pickle.loads(result)
+        return json.loads(result)
 
     def send(self, data: Any) -> None:
         """Send data to the server.
@@ -58,7 +58,7 @@ class BaseClient:
         :param data: Data to send to the server
         :type data: Any
         """
-        packets = pickle.dumps(data, protocol=0)
+        packets = json.dumps(data).encode('utf-8')
         value = socket.htonl(len(packets))
         size = struct.pack('L', value)
         self._socket.send(size)

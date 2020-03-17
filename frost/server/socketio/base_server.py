@@ -1,4 +1,4 @@
-import pickle
+import json
 import socket
 import struct
 import time
@@ -53,7 +53,7 @@ class BaseServer:
         :param data: The data to send to the client
         :type data: Any
         """
-        packets = pickle.dumps(data, protocol=0)
+        packets = json.dumps(data).encode('utf-8')
         value = socket.htonl(len(packets))
         size = struct.pack('L', value)
 
@@ -77,7 +77,7 @@ class BaseServer:
         while len(result) < size:
             result += conn.recv(size - len(result))
 
-        return pickle.loads(result)
+        return json.loads(result)
 
     @threaded(daemon=True)
     def _accept_conn(self, conn_data_cls: 'ConnectionData') -> None:
