@@ -1,4 +1,4 @@
-# PyFrost
+# <img src="icon.png" width="32" height="32"> PyFrost
 [![PyPi Release Version](https://img.shields.io/pypi/v/pyfrost?color=blue)](https://pypi.org/project/pyfrost/)
 [![GitHub Release Version](https://img.shields.io/github/v/release/Den4200/pyfrost?color=blue&include_prereleases&label=github)](https://github.com/Den4200/pyfrost/releases)
 ![PyFrost](https://img.shields.io/github/workflow/status/Den4200/pyfrost/PyFrost/master)
