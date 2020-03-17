@@ -5,9 +5,7 @@ from frost.client.auth import get_auth
 from frost.client.events import (
     Auth,
     Msgs,
-    messages,
-    login_status,
-    register_status
+    messages
 )
 from frost.client.socketio import BaseClient, threaded
 from frost.ext import Handler
@@ -66,15 +64,13 @@ class FrostClient(BaseClient):
         while True:
             handler.handle(self.recieve())
 
-    def login(self, username: str, password: str) -> int:
+    def login(self, username: str, password: str) -> None:
         """Login to the server.
 
         :param username: The username of the account
         :type username: str
         :param password: The password of the account
         :type password: str
-        :return: Data received from the server
-        :rtype: Any
         """
         self.send({
             'headers': {
@@ -83,9 +79,8 @@ class FrostClient(BaseClient):
             'username': username,
             'password': password
         })
-        return login_status.get_status()
 
-    def register(self, username: str, password: str) -> int:
+    def register(self, username: str, password: str) -> None:
         """Register an account on the server.
 
         :param username: The desired username of the account
@@ -100,7 +95,6 @@ class FrostClient(BaseClient):
             'username': username,
             'password': password
         })
-        return register_status.get_status()
 
     @get_auth
     def send_msg(self, msg: str, token: str, id_: str) -> None:

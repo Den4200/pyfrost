@@ -2,7 +2,7 @@ import time
 
 from frost import FrostClient
 from frost.client import Status, threaded  # NOQA: F401
-from frost.client.events import messages
+from frost.client.events import messages, login_status, register_status  # NOQA: F401
 
 
 @threaded(daemon=True)
@@ -28,18 +28,26 @@ def run_client():
     client.connect()
 
     # reg = None
-    # while reg in (Status.DUPLICATE_USERNAME.value, None):
-    #     reg = client.register(
-    #         input('Register Username: '),
-    #         input('Register Password: ')
+    # while reg in (Status.INVALID_AUTH.value, None):
+    #     client.login(
+    #         input('Username: '),
+    #         input('Password: ')
     #     )
+    #     status = None
+    #     while status is None:
+    #         reg = status = register_status.get_status()
+    #         time.sleep(0.1)
 
     login = None
     while login in (Status.INVALID_AUTH.value, None):
-        login = client.login(
+        client.login(
             input('Username: '),
             input('Password: ')
         )
+        status = None
+        while status is None:
+            login = status = login_status.get_status()
+            time.sleep(0.1)
 
     send_msg(client)
     check_msgs()
