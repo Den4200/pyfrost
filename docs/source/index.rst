@@ -1,6 +1,8 @@
 Welcome to the PyFrost documentation!
 =====================================
 
+.. image:: https://i.imgur.com/mbhyPMh.jpg
+
 The Official Client
 -------------------
 The official client for this library is under development.
