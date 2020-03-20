@@ -1,7 +1,7 @@
 import secrets
-from sqlite3 import IntegrityError
 from typing import Any, Dict, Union
 
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import (
     check_password_hash,
     generate_password_hash
