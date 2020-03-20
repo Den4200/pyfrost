@@ -24,7 +24,7 @@ def send_msg(client: 'FrostClient'):
 
 
 def run_client():
-    client = FrostClient()
+    client = FrostClient('pyfrost.sytes.net')
     client.connect()
 
     # reg = None

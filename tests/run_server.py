@@ -5,4 +5,4 @@ app = FrostServer(__file__)
 
 
 def run_server():
-    app.run()
+    app.run('0.0.0.0')
