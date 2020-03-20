@@ -1,22 +1,18 @@
 from datetime import datetime
-from sqlalchemy import Column, ForeignKey, Integer, String, Text, Table, DateTime
+
 from sqlalchemy.orm import relationship
-
-# from frost.server.database.db import Base
-
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
-
-engine = create_engine('sqlite:///database.sqlite', convert_unicode=True)
-db_session = scoped_session(
-    sessionmaker(
-        autocommit=False,
-        autoflush=True,
-        bind=engine
-    )
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    Table,
+    DateTime
 )
-Base = declarative_base()
+
+from frost.server.database.db import Base
+
 
 user_room_association = Table(
     'user_room_association', Base.metadata,

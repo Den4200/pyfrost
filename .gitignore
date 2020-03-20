@@ -132,7 +132,7 @@ proj_init.py
 
 # Databases
 *.db
-*.sqlite
+*.sqlite3
 
 # Storage
 .frost
