@@ -1,4 +1,3 @@
-import json
 import socket
 from functools import wraps
 from pathlib import Path
@@ -6,9 +5,9 @@ from typing import Any, Callable, Tuple
 
 from frost.ext import Handler
 from frost.server.cogs import Auth, Msgs
+from frost.server.database import init_db
 from frost.server.room import Room
 from frost.server.socketio import BaseServer, threaded
-from frost.server.storage.defaults import DEFAULT_FORMAT
 
 
 def send_partial(send_func: Callable, conn: 'socket.socket') -> Callable:
@@ -53,10 +52,9 @@ class FrostServer(BaseServer):
 
         self.func = self.on_user_connect
 
-        storage = Path('storage.json')
-        if not storage.exists():
-            with open(str(storage), 'w') as f:
-                json.dump(DEFAULT_FORMAT, f, indent=2)
+        db = Path('database.sqlite3')
+        if not db.exists():
+            init_db()
 
     def room(self, *deco_args: Any, **deco_kwargs: Any) -> Callable:
         """Create a room.

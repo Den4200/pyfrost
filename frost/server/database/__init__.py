@@ -1,12 +1,11 @@
-from frost.server.database.db import db_session, init_db
-from frost.server.database.models.main_models import Message, Room, User
-from frost.server.database.models.room_models import RoomMember
+from frost.server.database.db import Base, managed_session, init_db
+from frost.server.database.models import Message, Room, User
 
 __all__ = (
     'init_db',
-    'db_session',
+    'managed_session',
+    'Base',
     'User',
     'Room',
-    'Message',
-    'RoomMember'
+    'Message'
 )
