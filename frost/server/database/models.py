@@ -25,31 +25,33 @@ user_room_association = Table(
 
 
 class User(Base):
-    """The User model. :code:`__tablename__ = 'users'`"""
+    """The User model. :code:`__tablename__ = 'users'`
+    """
     __tablename__ = 'users'
-
     id = Column(Integer, primary_key=True, nullable=False)
     """The user's ID.
     """
 
     username = Column(String(32), unique=True, nullable=False)
-    """The user's username."""
-
+    """The user's username.
+    """
     password = Column(String(128), nullable=False)
-    """The user's password."""
-
+    """The user's password.
+    """
     token = Column(String(43), unique=True, nullable=True)
-    """The user's authentication token, used after login."""
-
+    """The user's authentication token, used after login.
+    """
     joined_rooms = relationship(
-        """The different rooms the user has joined."""
+        """The different rooms the user has joined.
+        """
         'Room',
         secondary=user_room_association,
         back_populates='users'
     )
 
     messages = relationship(
-        """The messages the user has sent."""
+        """The messages the user has sent.
+        """
         'Message',
         back_populates='user'
     )
@@ -59,30 +61,34 @@ class User(Base):
 
 
 class Room(Base):
-    """The Room model. :code:`__tablename__ = 'rooms'`"""
+    """The Room model. :code:`__tablename__ = 'rooms'`
+    """
     __tablename__ = 'rooms'
-
     id = Column(Integer, primary_key=True, nullable=False)
-    """The room's ID."""
+    """The room's ID.
+    """
 
     name = Column(String(32), unique=True, nullable=False)
-    """The room's name."""
-
+    """The room's name.
+    """
     invite_code = Column(String(36), unique=True, nullable=False)
-    """The room's invite code."""
-
+    """The room's invite code.
+    """
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    """The ID of the user who created the room."""
+    """The ID of the user who created the room.
+    """
 
     users = relationship(
-        """The users who are have joined the room."""
+        """The users who are have joined the room.
+        """
         'User',
         secondary=user_room_association,
         back_populates='joined_rooms'
     )
 
     messages = relationship(
-        """The messages that have been sent in the room."""
+        """The messages that have been sent in the room.
+        """
         'Message',
         back_populates='room'
     )
@@ -92,32 +98,37 @@ class Room(Base):
 
 
 class Message(Base):
-    """The Message model. :code:`__tablename__ = 'messages'`"""
+    """The Message model. :code:`__tablename__ = 'messages'`
+    """
     __tablename__ = 'messages'
 
     id = Column(Integer, primary_key=True)
-    """The message's ID."""
+    """The message's ID.
+    """
 
     message = Column(Text, nullable=False)
-    """The message's contents."""
-
+    """The message's contents.
+    """
     timestamp = Column(DateTime, default=datetime.utcnow)
-    """The date and time the message was sent."""
-
+    """The date and time the message was sent.
+    """
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    """The ID of the user who sent the message."""
-
+    """The ID of the user who sent the message.
+    """
     room_id = Column(Integer, ForeignKey('rooms.id'), nullable=False)
-    """The ID of the room the message was sent in."""
+    """The ID of the room the message was sent in.
+    """
 
     user = relationship(
-        """The user who sent the message."""
+        """The user who sent the message.
+        """
         'User',
         back_populates='messages'
     )
 
     room = relationship(
-        """The room the message was sent in."""
+        """The room the message was sent in.
+        """
         'Room',
         back_populates='messages'
     )

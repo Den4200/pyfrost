@@ -4,15 +4,19 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, Session  # NOQA: F401
 
+
 engine = create_engine('sqlite:///database.sqlite3', convert_unicode=True)
+"""The SQLAlchemy engine."""
+
 Base = declarative_base()
+"""The base model."""
 
 
 @contextmanager
 def managed_session() -> 'Session':
-    """A context manager to for thread-safe database access. \
-    Automatically commits if no errors occured and rolls back \
-    if an exception occurs. Session is removed after use.
+    """A context manager for thread-safe database access. \
+    Automatically commits if no errors occur, else it is rolled back. \
+    Session is removed after use.
 
     :yield: An SQLAlchemy scoped_session
     :rtype: :class:`sqlalchemy.orm.Session`
