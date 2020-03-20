@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -11,6 +13,27 @@ db_session = scoped_session(
     )
 )
 Base = declarative_base()
+
+
+@contextmanager
+def managed_session():
+    session = scoped_session(
+        sessionmaker(
+            autocommit=False,
+            autoflush=True,
+            bind=engine
+        )
+    )
+    try:
+        yield session
+        session.commit()
+
+    except Exception:
+        session.rollback()
+        raise
+
+    finally:
+        session.remove()
 
 
 def init_db():
