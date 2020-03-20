@@ -2,7 +2,7 @@ from functools import wraps
 from typing import Callable
 
 from frost.server.headers import Status
-from frost.server.storage import User
+from frost.server.database import managed_session, User
 
 
 def auth_required(func: Callable) -> Callable:
@@ -20,11 +20,14 @@ def auth_required(func: Callable) -> Callable:
         id_ = args[0]['headers'].get('id')
         token = args[0]['headers'].get('token')
 
-        if id_ is not None and token is not None:
-            user = User.search(id_)
+        with managed_session() as session:
+            user = session.query(User).filter(
+                User.id == id_,
+                User.token == token
+            ).first()
 
-            if user is not None and user['token'] == token:
-                return func(*args, **kwargs, id_=id_, token=token)
+        if user is not None:
+            return func(*args, **kwargs, id_=id_, token=token)
 
         return Status.INVALID_AUTH
 
