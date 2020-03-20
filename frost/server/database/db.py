@@ -1,16 +1,22 @@
 from contextlib import contextmanager
-from werkzeug.security import generate_password_hash
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker, Session  # NOQA: F401
 
 engine = create_engine('sqlite:///database.sqlite3', convert_unicode=True)
 Base = declarative_base()
 
 
 @contextmanager
-def managed_session():
+def managed_session() -> 'Session':
+    """A context manager to for thread-safe database access. \
+    Automatically commits if no errors occured and rolls back \
+    if an exception occurs. Session is removed after use.
+
+    :yield: An SQLAlchemy scoped_session
+    :rtype: :class:`sqlalchemy.orm.Session`
+    """
     session = scoped_session(
         sessionmaker(
             autocommit=False,
@@ -30,7 +36,10 @@ def managed_session():
         session.remove()
 
 
-def init_db():
+def init_db() -> None:
+    """Initlializes a database and creates the pre-defined modules.
+    """
+    from werkzeug.security import generate_password_hash
     from frost.server.database import models  # NOQA: F401
     Base.metadata.create_all(bind=engine)
 

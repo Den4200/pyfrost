@@ -1,5 +1,5 @@
 import secrets
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import (
@@ -152,21 +152,6 @@ class Msgs(Cog, route='messages'):
 
             for conn in conns:
                 send(conn, contents)
-
-    def _sort_msgs(
-        msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
-    ) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
-        """Sorts messages ascending by ID number.
-
-        :param msgs: The messages to be sorted
-        :type msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
-        :return: The sorted messages
-        :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
-        """
-        sorted_ids = sorted([
-            int(id_) for id_ in msgs if id_ != 'meta'
-        ])
-        return {str(id_): msgs[str(id_)] for id_ in sorted_ids}
 
     @auth_required
     def get_all_msgs(
