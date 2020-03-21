@@ -7,4 +7,10 @@ class Status(Enum):
     SUCCESS: int = 0
 
     INVALID_AUTH: int = 1
-    DUPLICATE_USERNAME: int = 2
+    PERMISSION_DENIED: int = 2
+
+    DUPLICATE_USERNAME: int = 3
+
+    ROOM_NOT_FOUND: int = 4
+    EMPTY_ROOM_NAME: int = 5
+    INVALID_INVITE: int = 6

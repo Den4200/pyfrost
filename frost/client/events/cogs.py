@@ -52,3 +52,24 @@ class Msgs(Cog, route='messages'):
         :type data: Dict[str, Any]
         """
         messages.add_new_msgs(data['msg'])
+
+    def post_get_all(data: Dict[str, Any]) -> None:
+        pass
+
+
+class Rooms(Cog, route='rooms'):
+
+    def post_create(data: Dict[str, Any]) -> None:
+        pass
+
+    def post_join(data: Dict[str, Any]) -> None:
+        pass
+
+    def post_leave(data: Dict[str, Any]) -> None:
+        pass
+
+    def post_invite_code(data: Dict[str, Any]) -> None:
+        pass
+
+    def post_all_joined(data: Dict[str, Any]) -> None:
+        pass

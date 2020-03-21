@@ -253,7 +253,7 @@ class Rooms(Cog, route='rooms'):
             kwargs['client_send']({
                 'headers': {
                     'path': 'rooms/post_create',
-                    'status': Status.EMPTY_NAME.value
+                    'status': Status.EMPTY_ROOM_NAME.value
                 }
             })
             return
