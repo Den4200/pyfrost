@@ -1,5 +1,6 @@
 import secrets
 from typing import Any, Dict
+import uuid
 
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import (
@@ -36,7 +37,7 @@ class Auth(Cog, route='authentication'):
                     password=password
                 )
                 user.joined_rooms.append(
-                    session.query(Room).first()
+                    session.query(Room).first()  # Auto join main room
                 )
                 session.add(user)
 
@@ -212,3 +213,138 @@ class Msgs(Cog, route='messages'):
             },
             'msg': msgs
         })
+
+
+class Rooms(Cog, route='rooms'):
+
+    @auth_required
+    def create(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        **kwargs: Any
+    ) -> None:
+        room_name = data['room_name']
+
+        if not room_name:
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_create',
+                    'status': Status.EMPTY_NAME.value
+                }
+            })
+            return
+
+        with managed_session() as session:
+            room = Room(
+                name=room_name,
+                owner_id=id_,
+                invite_code=str(uuid.uuid1())
+            )
+            session.add(room)
+            user = session.query(User).filter(User.id == id_).first()
+            user.joined_rooms.append(room)
+
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_create',
+                    'status': Status.SUCCESS.value
+                }
+            })
+            logger.info(f'User {user.username} created room {room_name}')
+
+    @auth_required
+    def join(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        **kwargs: Any
+    ) -> None:
+        code = data['invite_code']
+
+        with managed_session() as session:
+            room = session.query(Room).filter(Room.invite_code == code).first()
+
+            if room is None:
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'rooms/post_join',
+                        'status': Status.INVALID_INVITE.value
+                    }
+                })
+                return
+
+            user = session.query(User).filter(User.id == id_).first()
+            user.joined_rooms.append(room)
+
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_join',
+                    'status': Status.SUCCESS.value
+                }
+            })
+            logger.info(f'User {user.username} joined room {room.name}')
+
+    @auth_required
+    def leave(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        **kwargs: Any
+    ) -> None:
+        room_id = data['room_id']
+
+        with managed_session() as session:
+            room = session.query(Room).filter(Room.id == room_id).first()
+
+            if room is None:
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'rooms/post_leave',
+                        'status': Status.ROOM_NOT_FOUND.value
+                    }
+                })
+                return
+
+            user = session.query(User).filter(User.id == id_).first()
+            user.joined_rooms.remove(room)
+
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_leave',
+                    'status': Status.SUCCESS.value
+                }
+            })
+            logger.info(f'User {user.username} left room {room.name}')
+
+    @auth_required
+    def get_invite_code(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        **kwargs: Any
+    ) -> None:
+        room_id = data['room_id']
+
+        with managed_session() as session:
+            room = session.query(Room).filter(Room.id == room_id).first()
+
+            if room is None:
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'rooms/post_invite_code',
+                        'status': Status.ROOM_NOT_FOUND.value
+                    }
+                })
+                return
+
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_invite_code',
+                    'status': Status.SUCCESS.value
+                },
+                'room_invite_code': room.invite_code
+            })
+
+            user = session.query(User).filter(User.id == id_).first()
+            logger.info(f"User {user.username} was sent room {room.name}'s invite code'")
