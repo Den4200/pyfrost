@@ -121,16 +121,19 @@ class Msgs(Cog, route='messages'):
         :type id_: str
         """
         raw_msg = data['msg']
+        room_id = data['room_id']
         send = kwargs['send']
         conns = kwargs['users'].values()
 
         if raw_msg:
             with managed_session() as session:
                 user = session.query(User).filter(User.id == id_).first()
+                room = session.query(Room).filter(Room.id == room_id).first()
+
                 msg = Message(
                     message=raw_msg,
                     user_id=user.id,
-                    room_id=1  # room_id is hardcoded until separate rooms are implemeneted
+                    room_id=room_id
                 )
                 session.add(msg)
 
@@ -141,6 +144,10 @@ class Msgs(Cog, route='messages'):
                     'msg': {
                         msg.id: {
                             'message': raw_msg,
+                            'room': {
+                                'name': room.name,
+                                'id': room_id
+                            },
                             'from_user': {
                                 'username': user.username,
                                 'id': user.id
@@ -193,12 +200,28 @@ class Msgs(Cog, route='messages'):
         :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
         :type id_: str
         """
-        with managed_session() as session:
-            msgs = session.query(Message).limit(max_)
+        room_id = data['room_id']
 
+        with managed_session() as session:
+            room = session.query(Room).filter(Room.id == room_id).first()
+
+            if room is None:
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'messages/post_get_all',
+                        'status': Status.ROOM_NOT_FOUND.value
+                    }
+                })
+                return
+
+            msgs = room.messages
             msgs = {
                 msg.id: {
                     'message': msg.message,
+                    'room': {
+                        'name': room.name,
+                        'id': room_id
+                    },
                     'from_user': {
                         'username': msg.user.username,
                         'id': msg.user_id
@@ -348,3 +371,29 @@ class Rooms(Cog, route='rooms'):
 
             user = session.query(User).filter(User.id == id_).first()
             logger.info(f"User {user.username} was sent room {room.name}'s invite code'")
+
+    @auth_required
+    def get_all_joined(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        **kwargs: Any
+    ) -> None:
+        with managed_session() as session:
+            user = session.query(User).filter(User.id == id_).first()
+
+            rooms = user.joined_rooms
+            rooms = [
+                {
+                    'id': room.id,
+                    'name': room.name
+                } for room in rooms
+            ]
+
+        kwargs['client_send']({
+            'headers': {
+                'path': 'rooms/post_all_joined',
+                'status': Status.SUCCESS.value
+            },
+            'rooms': rooms
+        })
