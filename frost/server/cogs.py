@@ -361,6 +361,15 @@ class Rooms(Cog, route='rooms'):
                 })
                 return
 
+            if room.owner_id != id_:
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'rooms/post_invite_code',
+                        'status': Status.PERMISSION_DENIED.value
+                    }
+                })
+                return
+
             kwargs['client_send']({
                 'headers': {
                     'path': 'rooms/post_invite_code',
