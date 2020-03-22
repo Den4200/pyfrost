@@ -406,3 +406,42 @@ class Rooms(Cog, route='rooms'):
             },
             'rooms': rooms
         })
+
+    @auth_required
+    def get_members(
+        data: Dict[str, Any],
+        token: str,
+        id_: str,
+        **kwargs: Any
+    ) -> None:
+        room_id = data['room_id']
+
+        with managed_session() as session:
+            room = session.query(Room).filter(Room.id == room_id).first()
+            members = room.members
+
+            user = session.query(User).filter(User.id == id_).first()
+
+            if user not in members:
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'rooms/post_members',
+                        'status': Status.PERMISSION_DENIED.value
+                    }
+                })
+                return
+
+            members = [
+                {
+                    'username': member.username,
+                    'id': member.id
+                } for member in members
+            ]
+
+        kwargs['client_send']({
+            'headers': {
+                'path': 'rooms/post_members',
+                'status': Status.SUCCESS.value
+            },
+            'members': members
+        })

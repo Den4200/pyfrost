@@ -73,3 +73,6 @@ class Rooms(Cog, route='rooms'):
 
     def post_all_joined(data: Dict[str, Any]) -> None:
         pass
+
+    def post_members(data: Dict[str, Any]) -> None:
+        pass
