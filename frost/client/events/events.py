@@ -67,7 +67,12 @@ class EventStatus:
                 setattr(EventStatus, item, None)
 
 
-if __name__ == "__main__":
+class Memory:
+    invite_codes = dict()
+    rooms = list()
+
+
+if __name__ != "__main__":
     Messages.add_new_msgs({
         1: {
             'message': 'test 1',

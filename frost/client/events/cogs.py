@@ -1,7 +1,7 @@
 import json
 from typing import Any, Dict
 
-from frost.client.events.events import login_status, messages, register_status
+from frost.client.events.events import EventStatus, Memory, Messages
 from frost.client.headers import Status
 from frost.ext import Cog
 
@@ -16,7 +16,7 @@ class Auth(Cog, route='authentication'):
         :param data: Data received from the server
         :type data: Dict[str, Any]
         """
-        register_status.current_status = data['headers']['status']
+        EventStatus.register = data['headers']['status']
 
     def post_login(data: Dict[str, Any]) -> None:
         """Deals with the response received from the server after a login attempt.
@@ -38,7 +38,7 @@ class Auth(Cog, route='authentication'):
             with open('.frost', 'w') as f:
                 json.dump(contents, f, indent=2)
 
-        login_status.current_status = status
+        EventStatus.login = status
 
 
 class Msgs(Cog, route='messages'):
@@ -51,28 +51,34 @@ class Msgs(Cog, route='messages'):
         :param data: Data received from the server
         :type data: Dict[str, Any]
         """
-        messages.add_new_msgs(data['msg'])
+        Messages.add_new_msgs(data['msg'])
 
     def post_get_all(data: Dict[str, Any]) -> None:
-        pass
+        EventStatus.get_all_msgs = data['headers']['status']
 
 
 class Rooms(Cog, route='rooms'):
 
     def post_create(data: Dict[str, Any]) -> None:
-        pass
+        EventStatus.create_room = data['headers']['status']
 
     def post_join(data: Dict[str, Any]) -> None:
-        pass
+        EventStatus.join_room = data['headers']['status']
 
     def post_leave(data: Dict[str, Any]) -> None:
-        pass
+        EventStatus.leave_room = data['headers']['status']
 
     def post_invite_code(data: Dict[str, Any]) -> None:
-        pass
+        status = data['headers']['status']
+
+        if status == Status.SUCCESS.value:
+            Memory.invite_codes[data['room_id']] = data['room_invite_code']
+
+        EventStatus.get_invite_code = status
 
     def post_all_joined(data: Dict[str, Any]) -> None:
-        pass
+        Memory.rooms = data['rooms']
+        EventStatus.get_all_joined_rooms = data['headers']['status']
 
     def post_members(data: Dict[str, Any]) -> None:
         pass

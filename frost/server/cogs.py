@@ -234,6 +234,13 @@ class Msgs(Cog, route='messages'):
 
         kwargs['client_send']({
             'headers': {
+                'path': 'messages/post_get_all',
+                'status': Status.SUCCESS.value
+            }
+        })
+
+        kwargs['client_send']({
+            'headers': {
                 'path': 'messages/new'
             },
             'msg': msgs
@@ -270,13 +277,13 @@ class Rooms(Cog, route='rooms'):
             user = session.query(User).filter(User.id == id_).first()
             user.joined_rooms.append(room)
 
-            kwargs['client_send']({
-                'headers': {
-                    'path': 'rooms/post_create',
-                    'status': Status.SUCCESS.value
-                }
-            })
-            logger.info(f'User {user.username} created room {room_name}')
+        kwargs['client_send']({
+            'headers': {
+                'path': 'rooms/post_create',
+                'status': Status.SUCCESS.value
+            }
+        })
+        logger.info(f'User {user.username} created room {room_name}')
 
     @auth_required
     def join(
@@ -321,8 +328,9 @@ class Rooms(Cog, route='rooms'):
 
         with managed_session() as session:
             room = session.query(Room).filter(Room.id == room_id).first()
+            user = session.query(User).filter(User.id == id_).first()
 
-            if room is None:
+            if room is None or room not in user.joined_rooms:
                 kwargs['client_send']({
                     'headers': {
                         'path': 'rooms/post_leave',
@@ -331,16 +339,15 @@ class Rooms(Cog, route='rooms'):
                 })
                 return
 
-            user = session.query(User).filter(User.id == id_).first()
             user.joined_rooms.remove(room)
-
-            kwargs['client_send']({
-                'headers': {
-                    'path': 'rooms/post_leave',
-                    'status': Status.SUCCESS.value
-                }
-            })
             logger.info(f'User {user.username} left room {room.name}')
+
+        kwargs['client_send']({
+            'headers': {
+                'path': 'rooms/post_leave',
+                'status': Status.SUCCESS.value
+            }
+        })
 
     @auth_required
     def get_invite_code(
@@ -377,6 +384,7 @@ class Rooms(Cog, route='rooms'):
                     'path': 'rooms/post_invite_code',
                     'status': Status.SUCCESS.value
                 },
+                'room_id': room_id,
                 'room_invite_code': room.invite_code
             })
 
