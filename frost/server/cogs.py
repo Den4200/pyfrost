@@ -86,6 +86,8 @@ class Auth(Cog, route='authentication'):
                 })
                 logger.info(f'User "{username}" logged in')
 
+                # Send the main room messages
+                data['room_id'] = 1
                 Msgs._get_all_msgs(data, user.token, user.id, **kwargs)
 
                 logger.info(f'Sent user "{username}" all messages')
