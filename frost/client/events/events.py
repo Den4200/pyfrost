@@ -5,32 +5,30 @@ from typing import Dict, Union
 class Messages:
     """All messages will be stored in an instance of this class.
     """
+    all = dict()
+    __new = dict()
 
-    def __init__(self) -> None:
-        """The constructor method.
-        """
-        self.all_messages = dict()
-        self._new_messages = dict()
-
-    def get_new_msgs(self) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
+    @staticmethod
+    def get_new_msgs() -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
         """Returns new messages saved and moves them over to :code:`all_messages`.
 
         :return: The new messages
         :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
         """
-        for room_id, msgs in self._new_messages.items():
+        for room_id, msgs in Messages.__new.items():
 
-            if room_id in self.all_messages:
-                self.all_messages[room_id].update(msgs)
+            if room_id in Messages.all:
+                Messages.all[room_id].update(msgs)
             else:
-                self.all_messages[room_id] = msgs
+                Messages.all[room_id] = msgs
 
         try:
-            return self._new_messages
+            return Messages.__new
         finally:
-            self._new_messages = dict()
+            Messages.__new = dict()
 
-    def add_new_msgs(self, msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]) -> None:
+    @staticmethod
+    def add_new_msgs(msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]) -> None:
         """Save new messages, sorted by room.
 
         :param msgs: The messages to save
@@ -38,55 +36,39 @@ class Messages:
         """
         for msg_id, msg in msgs.items():
 
-            if msg['room']['id'] in self._new_messages:
-                self._new_messages[msg['room']['id']].update({msg_id: msg})
+            if msg['room']['id'] in Messages.__new:
+                Messages.__new[msg['room']['id']].update({msg_id: msg})
             else:
-                self._new_messages[msg['room']['id']] = {msg_id: msg}
+                Messages.__new[msg['room']['id']] = {msg_id: msg}
 
-    def clear(self) -> None:
+    @staticmethod
+    def clear() -> None:
         """Clears :code:`all_messages` and :code:`_new_messages`.
         """
-        self.all_messages = dict()
-        self._new_messages = dict()
+        Messages.all = dict()
+        Messages.__new = dict()
 
 
 class EventStatus:
-    """Stores the current status of an event.
+    """Stores the current status of all events.
     """
 
-    def __init__(self) -> None:
-        """The constructor method.
-        """
-        self.current_status = None
-
-    def get_status(self) -> int:
+    @staticmethod
+    def get_status(item) -> int:
         """Returns the current status and resets it after.
 
         :return: The current event status
         :rtype: int
         """
-        if self.current_status is not None:
+        if hasattr(EventStatus, item) and getattr(EventStatus, item) is not None:
             try:
-                return self.current_status
+                return getattr(EventStatus, item)
             finally:
-                self.current_status = None
-
-
-messages = Messages()
-"""An instance of :class:`frost.client.events.events.Messages`.
-"""
-
-login_status = EventStatus()
-"""An instance of :class:`frost.client.events.events.EventStatus` for login status.
-"""
-
-register_status = EventStatus()
-"""An instance of :class:`frost.client.events.events.EventStatus` for registration status.
-"""
+                setattr(EventStatus, item, None)
 
 
 if __name__ == "__main__":
-    messages.add_new_msgs({
+    Messages.add_new_msgs({
         1: {
             'message': 'test 1',
             'room': {
@@ -125,10 +107,10 @@ if __name__ == "__main__":
         },
     })
 
-    print(json.dumps(messages.get_new_msgs(), indent=2))
+    print(json.dumps(Messages.get_new_msgs(), indent=2))
     print('\n'*5)
 
-    messages.add_new_msgs({
+    Messages.add_new_msgs({
         4: {
             'message': 'test 4',
             'room': {
@@ -155,6 +137,6 @@ if __name__ == "__main__":
         },
     })
 
-    print(json.dumps(messages.get_new_msgs(), indent=2))
+    print(json.dumps(Messages.get_new_msgs(), indent=2))
     print('\n'*5)
-    print(json.dumps(messages.all_messages, indent=2))
+    print(json.dumps(Messages.all, indent=2))
