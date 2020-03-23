@@ -5,7 +5,7 @@ from frost.client.auth import get_auth
 from frost.client.events import (
     Auth,
     Msgs,
-    messages
+    Rooms
 )
 from frost.client.socketio import BaseClient, threaded
 from frost.ext import Handler
@@ -28,9 +28,9 @@ class FrostClient(BaseClient):
         # Load up cogs
         Auth()
         Msgs()
+        Rooms()
 
         frost_file = Path('.frost')
-
         if not frost_file.exists():
             with open(str(frost_file), 'w') as f:
                 json.dump({}, f)
@@ -97,7 +97,7 @@ class FrostClient(BaseClient):
         })
 
     @get_auth
-    def send_msg(self, msg: str, token: str, id_: str) -> None:
+    def send_msg(self, room_id: int, msg: str, token: str, id_: str) -> None:
         """Send a message to other users on the server.
 
         :param msg: The desired message to send
@@ -113,12 +113,14 @@ class FrostClient(BaseClient):
                 'id': id_,
                 'path': 'messages/send_msg'
             },
-            'msg': msg
+            'msg': msg,
+            'room_id': room_id
         })
 
     @get_auth
-    def get_all_msgs(
+    def get_room_msgs(
         self,
+        room_id: int,
         token: str,
         id_: str
     ) -> None:
@@ -128,14 +130,106 @@ class FrostClient(BaseClient):
         :type token: str
         :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
         :type id_: str
-        :return: All messages
-        :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
         """
-        messages.clear()
         self.send({
             'headers': {
-                'path': 'messages/get_all_msgs',
+                'path': 'messages/get_room_msgs',
+                'token': token,
+                'id': id_
+            },
+            'room_id': room_id
+        })
+
+    @get_auth
+    def create_room(
+        self,
+        room_name: str,
+        token: str,
+        id_: str
+    ) -> None:
+        self.send({
+            'headers': {
+                'path': 'rooms/create',
+                'token': token,
+                'id': id_
+            },
+            'room_name': room_name
+        })
+
+    @get_auth
+    def join_room(
+        self,
+        invite_code: str,
+        token: str,
+        id_: str
+    ) -> None:
+        self.send({
+            'headers': {
+                'path': 'rooms/join',
+                'token': token,
+                'id': id_
+            },
+            'invite_code': invite_code
+        })
+
+    @get_auth
+    def leave_room(
+        self,
+        room_id: int,
+        token: str,
+        id_: str
+    ) -> None:
+        self.send({
+            'headers': {
+                'path': 'rooms/leave',
+                'token': token,
+                'id': id_
+            },
+            'room_id': room_id
+        })
+
+    @get_auth
+    def get_invite_code(
+        self,
+        room_id: int,
+        token: str,
+        id_: str
+    ) -> None:
+        self.send({
+            'headers': {
+                'path': 'rooms/get_invite_code',
+                'token': token,
+                'id': id_
+            },
+            'room_id': room_id
+        })
+
+    @get_auth
+    def get_joined_rooms(
+        self,
+        token: str,
+        id_: str
+    ) -> None:
+        self.send({
+            'headers': {
+                'path': 'rooms/get_all_joined',
                 'token': token,
                 'id': id_
             }
+        })
+
+    @get_auth
+    def get_room_members(
+        self,
+        room_id: int,
+        token: str,
+        id_: str
+    ) -> None:
+        self.send({
+            'headers': {
+                'path': 'rooms/get_members',
+                'token': token,
+                'id': id_
+            },
+            'room_id': room_id
         })

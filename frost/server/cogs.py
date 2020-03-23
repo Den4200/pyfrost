@@ -13,6 +13,7 @@ from frost.server.auth import auth_required
 from frost.server.database import managed_session, Message, Room, User
 from frost.server.headers import Status
 from frost.server.logger import logger
+from frost.server.objects import Memory
 
 
 class Auth(Cog, route='authentication'):
@@ -84,11 +85,16 @@ class Auth(Cog, route='authentication'):
                     'token': user.token,
                     'id': user.id
                 })
+
+                user_obj = Memory.all_users[kwargs['addr']]
+                user_obj.login(user.id, username)
+                Memory.logged_in_users[user.id] = user_obj
+
                 logger.info(f'User "{username}" logged in')
 
                 # Send the main room messages
                 data['room_id'] = 1
-                Msgs._get_all_msgs(data, user.token, user.id, **kwargs)
+                Msgs._get_room_msgs(data, user.token, user.id, **kwargs)
 
                 logger.info(f'Sent user "{username}" all messages')
                 return
@@ -125,7 +131,6 @@ class Msgs(Cog, route='messages'):
         raw_msg = data['msg']
         room_id = data['room_id']
         send = kwargs['send']
-        conns = kwargs['users'].values()
 
         if raw_msg:
             with managed_session() as session:
@@ -160,8 +165,11 @@ class Msgs(Cog, route='messages'):
                 }
                 logger.info(f'[ Message ] {user.username}: {raw_msg}')
 
-            for conn in conns:
-                send(conn, contents)
+                for member in room.members:
+                    user = Memory.logged_in_users.get(member.id)
+
+                    if user is not None:
+                        send(user.conn, contents)
 
     @auth_required
     def get_room_msgs(
@@ -182,9 +190,9 @@ class Msgs(Cog, route='messages'):
         :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
         :type id_: str
         """
-        Msgs._get_all_msgs(data, token, id_, max_, **kwargs)
+        Msgs._get_room_msgs(data, token, id_, max_, **kwargs)
 
-    def _get_all_msgs(
+    def _get_room_msgs(
         data: Dict[str, Any],
         token: str,
         id_: str,

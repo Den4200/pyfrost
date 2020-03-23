@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Any, Callable, Tuple
 
 from frost.ext import Handler
-from frost.server.cogs import Auth, Msgs
+from frost.server.cogs import Auth, Msgs, Rooms
 from frost.server.database import init_db
+from frost.server.objects import Memory, UserObj
 from frost.server.room import Room
 from frost.server.socketio import BaseServer, threaded
 
@@ -41,14 +42,12 @@ class FrostServer(BaseServer):
         # Load up the cogs
         Auth()
         Msgs()
+        Rooms()
 
         path = Path(file)
 
         self._name = path.name
         self._dir = path.parent
-
-        self._rooms = list()
-        self.users = dict()
 
         self.func = self.on_user_connect
 
@@ -84,7 +83,9 @@ class FrostServer(BaseServer):
         :param addr: The user's IP address and port
         :type addr: Tuple[str, int]
         """
-        self.users[addr] = conn
+        user = UserObj(addr, conn)
+        Memory.all_users[addr] = user
+
         handler = Handler()
 
         while True:
@@ -92,13 +93,19 @@ class FrostServer(BaseServer):
                 data = self.recieve(conn)
 
             except Exception:
-                self.users.pop(addr)
+                Memory.all_users.pop(addr)
+
+                for id_, auth_user in Memory.logged_in_users.items():
+                    if auth_user.addr == addr:
+                        Memory.logged_in_users.pop(id_)
+                        break
+
                 break
 
             else:
                 handler.handle(
                     data,
-                    users=self.users,
+                    addr=addr,
                     send=self.send,
                     client_send=send_partial(self.send, conn)
                 )
