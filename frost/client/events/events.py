@@ -1,5 +1,6 @@
-import json
-from typing import Dict, Union
+from typing import Dict, Tuple, Union
+
+from frost.client.objects import Room, User
 
 
 class Messages:
@@ -8,27 +9,27 @@ class Messages:
     all = dict()
     __new = dict()
 
-    @staticmethod
-    def get_new_msgs() -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
+    @classmethod
+    def get_new_msgs(cls) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
         """Returns new messages saved and moves them over to :code:`all_messages`.
 
         :return: The new messages
         :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
         """
-        for room_id, msgs in Messages.__new.items():
+        for room_id, msgs in cls.__new.items():
 
-            if room_id in Messages.all:
-                Messages.all[room_id].update(msgs)
+            if room_id in cls.all:
+                cls.all[room_id].update(msgs)
             else:
-                Messages.all[room_id] = msgs
+                cls.all[room_id] = msgs
 
         try:
-            return Messages.__new
+            return cls.__new
         finally:
-            Messages.__new = dict()
+            cls.__new = dict()
 
-    @staticmethod
-    def add_new_msgs(msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]) -> None:
+    @classmethod
+    def add_new_msgs(cls, msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]) -> None:
         """Save new messages, sorted by room.
 
         :param msgs: The messages to save
@@ -36,112 +37,63 @@ class Messages:
         """
         for msg_id, msg in msgs.items():
 
-            if msg['room']['id'] in Messages.__new:
-                Messages.__new[msg['room']['id']].update({msg_id: msg})
+            if msg['room']['id'] in cls.__new:
+                cls.__new[msg['room']['id']].update({msg_id: msg})
             else:
-                Messages.__new[msg['room']['id']] = {msg_id: msg}
+                cls.__new[msg['room']['id']] = {msg_id: msg}
 
-    @staticmethod
-    def clear() -> None:
+    @classmethod
+    def clear(cls) -> None:
         """Clears :code:`all_messages` and :code:`_new_messages`.
         """
-        Messages.all = dict()
-        Messages.__new = dict()
+        cls.all = dict()
+        cls.__new = dict()
 
 
 class EventStatus:
     """Stores the current status of all events.
     """
+    login = None
+    register = None
 
-    @staticmethod
-    def get_status(item) -> int:
+    join_room = None
+    leave_room = None
+    create_room = None
+
+    get_room_msgs = None
+    get_invite_code = None
+    get_room_members = None
+    get_all_joined_rooms = None
+
+    @classmethod
+    def get_status(cls, item) -> int:
         """Returns the current status and resets it after.
 
         :return: The current event status
         :rtype: int
         """
-        if hasattr(EventStatus, item) and getattr(EventStatus, item) is not None:
+        if hasattr(cls, item) and getattr(cls, item) is not None:
             try:
-                return getattr(EventStatus, item)
+                return getattr(cls, item)
             finally:
-                setattr(EventStatus, item, None)
+                setattr(cls, item, None)
 
 
 class Memory:
-    invite_codes = dict()
-    rooms = list()
+    rooms = dict()
 
+    @classmethod
+    def add_rooms(cls, *rooms: Tuple[Dict[str, Union[str, int]]]) -> None:
+        cls.rooms.update({
+            room['id']: Room(room['id'], room['name']) for room in rooms
+        })
 
-if __name__ != "__main__":
-    Messages.add_new_msgs({
-        1: {
-            'message': 'test 1',
-            'room': {
-                'name': 'test room',
-                'id': 1
-            },
-            'from_user': {
-                'username': 'test user',
-                'id': 1
-            },
-            'timestamp': 'todayyyy'
-        },
-        2: {
-            'message': 'test 2',
-            'room': {
-                'name': 'test room',
-                'id': 5
-            },
-            'from_user': {
-                'username': 'test user',
-                'id': 1
-            },
-            'timestamp': 'todayyyy'
-        },
-        3: {
-            'message': 'test 3',
-            'room': {
-                'name': 'test room',
-                'id': 1
-            },
-            'from_user': {
-                'username': 'test user',
-                'id': 1
-            },
-            'timestamp': 'todayyyy'
-        },
-    })
+    @classmethod
+    def add_room_members(cls, room_id: int, *members: Tuple[Dict[str, Union[str, int]]]) -> None:
+        cls.rooms[room_id].members.extend(
+            User(m['id'], m['username']) for m in members
+        )
 
-    print(json.dumps(Messages.get_new_msgs(), indent=2))
-    print('\n'*5)
-
-    Messages.add_new_msgs({
-        4: {
-            'message': 'test 4',
-            'room': {
-                'name': 'test room',
-                'id': 5
-            },
-            'from_user': {
-                'username': 'test user',
-                'id': 1
-            },
-            'timestamp': 'todayyyy'
-        },
-        5: {
-            'message': 'test 5',
-            'room': {
-                'name': 'test room',
-                'id': 1
-            },
-            'from_user': {
-                'username': 'test user',
-                'id': 1
-            },
-            'timestamp': 'todayyyy'
-        },
-    })
-
-    print(json.dumps(Messages.get_new_msgs(), indent=2))
-    print('\n'*5)
-    print(json.dumps(Messages.all, indent=2))
+    @classmethod
+    def set_invite_code(cls, room_id: int, invite_code: str) -> None:
+        cls.rooms[room_id].invite_code = invite_code

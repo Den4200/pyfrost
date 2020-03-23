@@ -164,7 +164,7 @@ class Msgs(Cog, route='messages'):
                 send(conn, contents)
 
     @auth_required
-    def get_all_msgs(
+    def get_room_msgs(
         data: Dict[str, Any],
         token: str,
         id_: str,
@@ -210,7 +210,7 @@ class Msgs(Cog, route='messages'):
             if room is None:
                 kwargs['client_send']({
                     'headers': {
-                        'path': 'messages/post_get_all',
+                        'path': 'messages/post_room',
                         'status': Status.ROOM_NOT_FOUND.value
                     }
                 })
@@ -234,7 +234,7 @@ class Msgs(Cog, route='messages'):
 
         kwargs['client_send']({
             'headers': {
-                'path': 'messages/post_get_all',
+                'path': 'messages/post_room',
                 'status': Status.SUCCESS.value
             }
         })
@@ -453,5 +453,6 @@ class Rooms(Cog, route='rooms'):
                 'path': 'rooms/post_members',
                 'status': Status.SUCCESS.value
             },
+            'room_id': room_id,
             'members': members
         })

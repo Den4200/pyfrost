@@ -53,8 +53,8 @@ class Msgs(Cog, route='messages'):
         """
         Messages.add_new_msgs(data['msg'])
 
-    def post_get_all(data: Dict[str, Any]) -> None:
-        EventStatus.get_all_msgs = data['headers']['status']
+    def post_room(data: Dict[str, Any]) -> None:
+        EventStatus.get_room_msgs = data['headers']['status']
 
 
 class Rooms(Cog, route='rooms'):
@@ -72,13 +72,18 @@ class Rooms(Cog, route='rooms'):
         status = data['headers']['status']
 
         if status == Status.SUCCESS.value:
-            Memory.invite_codes[data['room_id']] = data['room_invite_code']
+            Memory.set_invite_code(data['room_id'], data['room_invite_code'])
 
         EventStatus.get_invite_code = status
 
     def post_all_joined(data: Dict[str, Any]) -> None:
-        Memory.rooms = data['rooms']
+        Memory.add_rooms(data['rooms'])
         EventStatus.get_all_joined_rooms = data['headers']['status']
 
     def post_members(data: Dict[str, Any]) -> None:
-        pass
+        status = data['headers']['status']
+
+        if status == Status.SUCCESS.value:
+            Memory.add_room_members(data['room_id'], data['members'])
+
+        EventStatus.get_room_members = status
