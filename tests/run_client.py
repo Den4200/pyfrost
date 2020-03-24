@@ -90,7 +90,7 @@ def run_client():
 
     # reg = None
     # while reg in (Status.INVALID_AUTH.value, None):
-    #     client.login(
+    #     client.register(
     #         input('Username: '),
     #         input('Password: ')
     #     )
@@ -106,8 +106,13 @@ def run_client():
 
     get_joined_rooms(client)
 
-    join_room(client, 'aff10152-6d4c-11ea-87fe-9cb6d0d6fdc2')
+    # create_room(client, 'test room')
+    # get_invite_code(client, 2)
+
+    join_room(client, 'ace99810-6d80-11ea-9c2c-48a472645032')
     print(Memory.rooms)
+
+    # client.send_msg(2, 'testing again')
 
     get_room_msgs(client, 2)
     time.sleep(0.25)

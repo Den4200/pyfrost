@@ -47,16 +47,15 @@ def init_db() -> None:
     from frost.server.database import models  # NOQA: F401
     Base.metadata.create_all(bind=engine)
 
-    # This is here for now, until separate rooms are implemented.
     with managed_session() as session:
         session.add_all([
             models.User(
-                username='f1re',
-                password=generate_password_hash('pw')
+                username='master',
+                password=generate_password_hash('password')
             ),
             models.Room(
                 name='Main Room',
-                invite_code='abc123',
+                invite_code='main',
                 owner_id=1
             )
         ])
