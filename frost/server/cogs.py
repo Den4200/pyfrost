@@ -95,8 +95,6 @@ class Auth(Cog, route='authentication'):
                 # Send the main room messages
                 data['room_id'] = 1
                 Msgs._get_room_msgs(data, user.token, user.id, **kwargs)
-
-                logger.info(f'Sent user "{username}" all messages')
                 return
 
         kwargs['client_send']({
@@ -143,6 +141,8 @@ class Msgs(Cog, route='messages'):
                     room_id=room_id
                 )
                 session.add(msg)
+                # TODO: make sure that the user can only send a message to a room
+                # if the user is a member of it
 
                 contents = {
                     'headers': {
@@ -165,7 +165,7 @@ class Msgs(Cog, route='messages'):
                 }
                 logger.info(f'[ Message ] {user.username}: {raw_msg}')
 
-                for member in room.members:
+                for member in room.users:
                     user = Memory.logged_in_users.get(member.id)
 
                     if user is not None:
@@ -240,19 +240,24 @@ class Msgs(Cog, route='messages'):
                 } for msg in msgs
             }
 
-        kwargs['client_send']({
-            'headers': {
-                'path': 'messages/post_room',
-                'status': Status.SUCCESS.value
-            }
-        })
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'messages/post_room',
+                    'status': Status.SUCCESS.value
+                }
+            })
 
-        kwargs['client_send']({
-            'headers': {
-                'path': 'messages/new'
-            },
-            'msg': msgs
-        })
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'messages/new'
+                },
+                'msg': msgs
+            })
+
+            user = session.query(User).filter(User.id == id_).first()
+            logger.info(
+                f'User "{user.username}" was sent {len(msgs)} messages from room "{room.name}"'
+            )
 
 
 class Rooms(Cog, route='rooms'):
@@ -275,23 +280,35 @@ class Rooms(Cog, route='rooms'):
             })
             return
 
-        with managed_session() as session:
-            room = Room(
-                name=room_name,
-                owner_id=id_,
-                invite_code=str(uuid.uuid1())
-            )
-            session.add(room)
-            user = session.query(User).filter(User.id == id_).first()
-            user.joined_rooms.append(room)
+        try:
+            with managed_session() as session:
+                room = Room(
+                    name=room_name,
+                    owner_id=id_,
+                    invite_code=str(uuid.uuid1())
+                )
+                session.add(room)
+                user = session.query(User).filter(User.id == id_).first()
+                user.joined_rooms.append(room)
 
-        kwargs['client_send']({
-            'headers': {
-                'path': 'rooms/post_create',
-                'status': Status.SUCCESS.value
-            }
-        })
-        logger.info(f'User {user.username} created room {room_name}')
+                username = user.username
+
+        except IntegrityError:
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_create',
+                    'status': Status.DUPLICATE_ROOM_NAME.value
+                }
+            })
+
+        else:
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_create',
+                    'status': Status.SUCCESS.value
+                }
+            })
+            logger.info(f'User "{username}" created room "{room_name}"')
 
     @auth_required
     def join(
@@ -321,9 +338,13 @@ class Rooms(Cog, route='rooms'):
                 'headers': {
                     'path': 'rooms/post_join',
                     'status': Status.SUCCESS.value
+                },
+                'room': {
+                    'id': room.id,
+                    'name': room.name
                 }
             })
-            logger.info(f'User {user.username} joined room {room.name}')
+            logger.info(f'User "{user.username}" joined room "{room.name}"')
 
     @auth_required
     def leave(
@@ -348,13 +369,14 @@ class Rooms(Cog, route='rooms'):
                 return
 
             user.joined_rooms.remove(room)
-            logger.info(f'User {user.username} left room {room.name}')
+            logger.info(f'User "{user.username}" left room "{room.name}"')
 
         kwargs['client_send']({
             'headers': {
                 'path': 'rooms/post_leave',
                 'status': Status.SUCCESS.value
-            }
+            },
+            'room_id': room_id
         })
 
     @auth_required
@@ -397,7 +419,7 @@ class Rooms(Cog, route='rooms'):
             })
 
             user = session.query(User).filter(User.id == id_).first()
-            logger.info(f"User {user.username} was sent room {room.name}'s invite code'")
+            logger.info(f'User "{user.username}" was sent the invite code of room "{room.name}"')
 
     @auth_required
     def get_all_joined(
@@ -416,6 +438,7 @@ class Rooms(Cog, route='rooms'):
                     'name': room.name
                 } for room in rooms
             ]
+            logger.info(f'User "{user.username}" was sent their {len(rooms)} joined rooms')
 
         kwargs['client_send']({
             'headers': {
@@ -436,7 +459,7 @@ class Rooms(Cog, route='rooms'):
 
         with managed_session() as session:
             room = session.query(Room).filter(Room.id == room_id).first()
-            members = room.members
+            members = room.users
 
             user = session.query(User).filter(User.id == id_).first()
 
@@ -455,6 +478,10 @@ class Rooms(Cog, route='rooms'):
                     'id': member.id
                 } for member in members
             ]
+
+            logger.info(
+                f'User "{user.username}" was sent all {len(members)} members in room "{room.name}"'
+            )
 
         kwargs['client_send']({
             'headers': {

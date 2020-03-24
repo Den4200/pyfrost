@@ -63,9 +63,19 @@ class Rooms(Cog, route='rooms'):
         EventStatus.create_room = data['headers']['status']
 
     def post_join(data: Dict[str, Any]) -> None:
-        EventStatus.join_room = data['headers']['status']
+        status = data['headers']['status']
+
+        if status == Status.SUCCESS.value:
+            Memory.add_rooms(data['room'])
+
+        EventStatus.join_room = status
 
     def post_leave(data: Dict[str, Any]) -> None:
+        status = data['headers']['status']
+
+        if status == Status.SUCCESS.value:
+            Memory.rooms.pop(data['room_id'])
+
         EventStatus.leave_room = data['headers']['status']
 
     def post_invite_code(data: Dict[str, Any]) -> None:
@@ -77,13 +87,13 @@ class Rooms(Cog, route='rooms'):
         EventStatus.get_invite_code = status
 
     def post_all_joined(data: Dict[str, Any]) -> None:
-        Memory.add_rooms(data['rooms'])
-        EventStatus.get_all_joined_rooms = data['headers']['status']
+        Memory.add_rooms(*data['rooms'])
+        EventStatus.get_joined_rooms = data['headers']['status']
 
     def post_members(data: Dict[str, Any]) -> None:
         status = data['headers']['status']
 
         if status == Status.SUCCESS.value:
-            Memory.add_room_members(data['room_id'], data['members'])
+            Memory.add_room_members(data['room_id'], *data['members'])
 
         EventStatus.get_room_members = status

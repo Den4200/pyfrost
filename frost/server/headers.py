@@ -13,4 +13,5 @@ class Status(Enum):
 
     ROOM_NOT_FOUND: int = 4
     EMPTY_ROOM_NAME: int = 5
-    INVALID_INVITE: int = 6
+    DUPLICATE_ROOM_NAME: int = 6
+    INVALID_INVITE: int = 7

@@ -16,13 +16,6 @@ class Messages:
         :return: The new messages
         :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
         """
-        for room_id, msgs in cls.__new.items():
-
-            if room_id in cls.all:
-                cls.all[room_id].update(msgs)
-            else:
-                cls.all[room_id] = msgs
-
         try:
             return cls.__new
         finally:
@@ -41,6 +34,11 @@ class Messages:
                 cls.__new[msg['room']['id']].update({msg_id: msg})
             else:
                 cls.__new[msg['room']['id']] = {msg_id: msg}
+
+            if msg['room']['id'] in cls.all:
+                cls.all[msg['room']['id']].update({msg_id: msg})
+            else:
+                cls.all[msg['room']['id']] = {msg_id: msg}
 
     @classmethod
     def clear(cls) -> None:
@@ -63,7 +61,7 @@ class EventStatus:
     get_room_msgs = None
     get_invite_code = None
     get_room_members = None
-    get_all_joined_rooms = None
+    get_joined_rooms = None
 
     @classmethod
     def get_status(cls, item) -> int:

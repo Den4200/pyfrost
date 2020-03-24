@@ -1,5 +1,4 @@
 import socket
-from functools import wraps
 from pathlib import Path
 from typing import Any, Callable, Tuple
 
@@ -7,7 +6,6 @@ from frost.ext import Handler
 from frost.server.cogs import Auth, Msgs, Rooms
 from frost.server.database import init_db
 from frost.server.objects import Memory, UserObj
-from frost.server.room import Room
 from frost.server.socketio import BaseServer, threaded
 
 
@@ -54,25 +52,6 @@ class FrostServer(BaseServer):
         db = Path('database.sqlite3')
         if not db.exists():
             init_db()
-
-    def room(self, *deco_args: Any, **deco_kwargs: Any) -> Callable:
-        """Create a room.
-
-        :raises NotImplementedError: This decorator is not implemented yet
-        """
-        raise NotImplementedError
-
-        def inner(func) -> Callable:
-
-            @wraps(func)
-            def execute(*args: Any, **kwargs: Any) -> Any:
-                room = Room(*deco_args, **deco_kwargs)
-                self._rooms.append(room)
-                return func(room)
-
-            return execute
-
-        return inner
 
     @threaded()
     def on_user_connect(self, conn: 'socket.socket', addr: Tuple[str, int]) -> None:
