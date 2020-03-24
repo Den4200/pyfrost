@@ -54,6 +54,14 @@ class Msgs(Cog, route='messages'):
         """
         Messages.add_new_msgs(data['msg'])
 
+    def post_new(data: Dict[str, Any]) -> None:
+        """Stores the response status of a send message attempt.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
+        EventStatus.send_msg = data['headers']['status']
+
     def post_room(data: Dict[str, Any]) -> None:
         """Deals with the post response from requesting all messages in a specific room. \
         Messages are stored in :class:`frost.client.events.events.Messages`.

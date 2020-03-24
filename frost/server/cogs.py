@@ -1,6 +1,6 @@
 import secrets
-from typing import Any, Dict
 import uuid
+from typing import Any, Dict
 
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import (
@@ -10,10 +10,15 @@ from werkzeug.security import (
 
 from frost.ext import Cog
 from frost.server.auth import auth_required
-from frost.server.database import managed_session, Message, Room, User
 from frost.server.headers import Status
 from frost.server.logger import logger
 from frost.server.objects import Memory
+from frost.server.database import (
+    Message,
+    Room,
+    User,
+    managed_session
+)
 
 
 class Auth(Cog, route='authentication'):
@@ -21,7 +26,7 @@ class Auth(Cog, route='authentication'):
     """
 
     def register(data: Dict[str, Any], **kwargs: Any) -> None:
-        """Registers the a new user with the given data.
+        """Registers a new user with the given username and password.
 
         :param data: Data received from the client
         :type data: Dict[str, Any]
@@ -63,7 +68,7 @@ class Auth(Cog, route='authentication'):
             })
 
     def login(data: Dict[str, Any], **kwargs: Any) -> None:
-        """Logs in the given user with the given data.
+        """Logs in a user with the given username and password.
 
         :param data: Data received from the client
         :type data: Dict[str, Any]
@@ -117,7 +122,7 @@ class Msgs(Cog, route='messages'):
         id_: str,
         **kwargs: Any
     ) -> None:
-        """Saves and stores the message received from a client.
+        """Saves the message received from a client and sends it off to other users in the room.
 
         :param data: Data received from a client
         :type data: Dict[str, Any]
@@ -135,14 +140,21 @@ class Msgs(Cog, route='messages'):
                 user = session.query(User).filter(User.id == id_).first()
                 room = session.query(Room).filter(Room.id == room_id).first()
 
+                if room not in user.joined_rooms:
+                    kwargs['client_send']({
+                        'headers': {
+                            'path': 'messages/post_new',
+                            'status': Status.PERMISSION_DENIED.value
+                        }
+                    })
+                    return
+
                 msg = Message(
                     message=raw_msg,
                     user_id=user.id,
                     room_id=room_id
                 )
                 session.add(msg)
-                # TODO: make sure that the user can only send a message to a room
-                # if the user is a member of it
 
                 contents = {
                     'headers': {
@@ -164,6 +176,13 @@ class Msgs(Cog, route='messages'):
                     }
                 }
                 logger.info(f'[ Message ] {user.username}: {raw_msg}')
+
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'messages/post_new',
+                        'status': Status.SUCCESS.value
+                    }
+                })
 
                 for member in room.users:
                     user = Memory.logged_in_users.get(member.id)

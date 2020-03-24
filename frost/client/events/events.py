@@ -62,6 +62,7 @@ class EventStatus:
     leave_room = None
     create_room = None
 
+    send_msg = None
     get_room_msgs = None
     get_invite_code = None
     get_room_members = None
