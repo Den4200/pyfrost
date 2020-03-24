@@ -198,11 +198,11 @@ class Msgs(Cog, route='messages'):
         max_: int = 100,
         **kwargs: Any
     ) -> None:
-        """Gets up to :code:`max_` past messages.
+        """Gets up to :code:`max_` previous messages from a specific room.
 
         :param data: Data received from the client
         :type data: Dict[str, Any]
-        :param max_: The maximum number of messages to get, defaults to 50
+        :param max_: The maximum number of messages to get from a room, defaults to 50
         :type max_: int, optional
         :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
         :type token: str
@@ -218,11 +218,11 @@ class Msgs(Cog, route='messages'):
         max_: int = 100,
         **kwargs: Any
     ) -> None:
-        """Gets up to :code:`max_` past messages.
+        """Gets up to :code:`max_` previous messages from a specific room.
 
         :param data: Data received from the client
         :type data: Dict[str, Any]
-        :param max_: The maximum number of messages to get, defaults to 50
+        :param max_: The maximum number of messages to get from a room, defaults to 50
         :type max_: int, optional
         :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
         :type token: str
@@ -280,6 +280,8 @@ class Msgs(Cog, route='messages'):
 
 
 class Rooms(Cog, route='rooms'):
+    """Deals with room within a server. :code:`route='rooms'`
+    """
 
     @auth_required
     def create(
@@ -288,6 +290,15 @@ class Rooms(Cog, route='rooms'):
         id_: str,
         **kwargs: Any
     ) -> None:
+        """Creates a new room in the server.
+
+        :param data: Data received from a client
+        :type data: Dict[str, Any]
+        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
+        :type token: str
+        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
+        :type id_: str
+        """
         room_name = data['room_name']
 
         if not room_name:
@@ -336,6 +347,15 @@ class Rooms(Cog, route='rooms'):
         id_: str,
         **kwargs: Any
     ) -> None:
+        """Join an existing room within the server with an invite code.
+
+        :param data: Data received from a client
+        :type data: Dict[str, Any]
+        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
+        :type token: str
+        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
+        :type id_: str
+        """
         code = data['invite_code']
 
         with managed_session() as session:
@@ -372,6 +392,15 @@ class Rooms(Cog, route='rooms'):
         id_: str,
         **kwargs: Any
     ) -> None:
+        """Leave a specific room within the server.
+
+        :param data: Data received from a client
+        :type data: Dict[str, Any]
+        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
+        :type token: str
+        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
+        :type id_: str
+        """
         room_id = data['room_id']
 
         with managed_session() as session:
@@ -405,6 +434,16 @@ class Rooms(Cog, route='rooms'):
         id_: str,
         **kwargs: Any
     ) -> None:
+        """Get the invite code of a specific room in the server. \
+        Only an owner can request for their own room's invite code.
+
+        :param data: Data received from a client
+        :type data: Dict[str, Any]
+        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
+        :type token: str
+        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
+        :type id_: str
+        """
         room_id = data['room_id']
 
         with managed_session() as session:
@@ -447,6 +486,15 @@ class Rooms(Cog, route='rooms'):
         id_: str,
         **kwargs: Any
     ) -> None:
+        """Get the all the rooms a specific user has joined.
+
+        :param data: Data received from a client
+        :type data: Dict[str, Any]
+        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
+        :type token: str
+        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
+        :type id_: str
+        """
         with managed_session() as session:
             user = session.query(User).filter(User.id == id_).first()
 
@@ -474,6 +522,15 @@ class Rooms(Cog, route='rooms'):
         id_: str,
         **kwargs: Any
     ) -> None:
+        """Get all the members of a specific room the user has joined.
+
+        :param data: Data received from a client
+        :type data: Dict[str, Any]
+        :param token: The user's token, autofilled by :meth:`frost.server.auth.auth_required`
+        :type token: str
+        :param id_: The user's ID, autofilled by :meth:`frost.server.auth.auth_required`
+        :type id_: str
+        """
         room_id = data['room_id']
 
         with managed_session() as session:

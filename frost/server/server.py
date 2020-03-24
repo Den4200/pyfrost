@@ -4,7 +4,6 @@ from typing import Any, Callable, Tuple
 
 from frost.ext import Handler
 from frost.server.cogs import Auth, Msgs, Rooms
-from frost.server.database import init_db
 from frost.server.objects import Memory, UserObj
 from frost.server.socketio import BaseServer, threaded
 
@@ -51,6 +50,7 @@ class FrostServer(BaseServer):
 
         db = Path('database.sqlite3')
         if not db.exists():
+            from frost.server.database import init_db
             init_db()
 
     @threaded()
@@ -58,7 +58,7 @@ class FrostServer(BaseServer):
         """Handles the connection of a client and executes tasks accordingly.
 
         :param conn: The client's connection
-        :type conn: socket.socket
+        :type conn: 'socket.socket'
         :param addr: The user's IP address and port
         :type addr: Tuple[str, int]
         """
