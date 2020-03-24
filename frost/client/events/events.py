@@ -1,20 +1,22 @@
-from typing import Dict, Tuple, Union
-
-from frost.client.objects import Room, User
+from typing import Dict, Optional, Union
 
 
 class Messages:
-    """All messages will be stored in an instance of this class.
+    """All messages will be stored in this class.
     """
     all = dict()
+    """All messages stored.
+    """
     __new = dict()
+    """New, unread messages.
+    """
 
     @classmethod
-    def get_new_msgs(cls) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
-        """Returns new messages saved and moves them over to :code:`all_messages`.
+    def get_new_msgs(cls) -> Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]:
+        """Returns new, unread messages.
 
         :return: The new messages
-        :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+        :rtype: Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]
         """
         try:
             return cls.__new
@@ -22,11 +24,13 @@ class Messages:
             cls.__new = dict()
 
     @classmethod
-    def add_new_msgs(cls, msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]) -> None:
-        """Save new messages, sorted by room.
+    def add_new_msgs(
+        cls, msgs: Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]
+    ) -> None:
+        """Save new messages, grouped by room.
 
         :param msgs: The messages to save
-        :type msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+        :type msgs: Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]
         """
         for msg_id, msg in msgs.items():
 
@@ -42,7 +46,7 @@ class Messages:
 
     @classmethod
     def clear(cls) -> None:
-        """Clears :code:`all_messages` and :code:`_new_messages`.
+        """Clears :code:`cls.all` and :code:`cls.__new`.
         """
         cls.all = dict()
         cls.__new = dict()
@@ -64,34 +68,15 @@ class EventStatus:
     get_joined_rooms = None
 
     @classmethod
-    def get_status(cls, item) -> int:
-        """Returns the current status and resets it after.
+    def get_status(cls, item: str) -> Optional[int]:
+        """Returns the current status of the specified item \
+        and resets it to :code:`None` after.
 
         :return: The current event status
-        :rtype: int
+        :rtype: Optional[int]
         """
         if hasattr(cls, item) and getattr(cls, item) is not None:
             try:
                 return getattr(cls, item)
             finally:
                 setattr(cls, item, None)
-
-
-class Memory:
-    rooms = dict()
-
-    @classmethod
-    def add_rooms(cls, *rooms: Tuple[Dict[str, Union[str, int]]]) -> None:
-        cls.rooms.update({
-            room['id']: Room(room['id'], room['name']) for room in rooms
-        })
-
-    @classmethod
-    def add_room_members(cls, room_id: int, *members: Tuple[Dict[str, Union[str, int]]]) -> None:
-        cls.rooms[room_id].members.extend(
-            User(m['id'], m['username']) for m in members
-        )
-
-    @classmethod
-    def set_invite_code(cls, room_id: int, invite_code: str) -> None:
-        cls.rooms[room_id].invite_code = invite_code

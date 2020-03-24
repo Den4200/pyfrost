@@ -98,8 +98,10 @@ class FrostClient(BaseClient):
 
     @get_auth
     def send_msg(self, room_id: int, msg: str, token: str, id_: str) -> None:
-        """Send a message to other users on the server.
+        """Send a message to other users on a server in a specific room.
 
+        :param room_id: The ID of the room to send the message to
+        :type room_id: int
         :param msg: The desired message to send
         :type msg: str
         :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
@@ -124,8 +126,10 @@ class FrostClient(BaseClient):
         token: str,
         id_: str
     ) -> None:
-        """Get all messages from the server. Should not be needed.
+        """Get all messages from a specific room in a server.
 
+        :param room_id: The ID of the room to get the messages from
+        :type room_id: int
         :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
         :type token: str
         :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
@@ -147,6 +151,15 @@ class FrostClient(BaseClient):
         token: str,
         id_: str
     ) -> None:
+        """Create a new room in a server.
+
+        :param room_name: The name of the room to create
+        :type room_name: str
+        :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
+        :type token: str
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
+        :type id_: str
+        """
         self.send({
             'headers': {
                 'path': 'rooms/create',
@@ -163,6 +176,15 @@ class FrostClient(BaseClient):
         token: str,
         id_: str
     ) -> None:
+        """Join a room in a server with an invite code.
+
+        :param invite_code: The invite code the room to join
+        :type invite_code: str
+        :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
+        :type token: str
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
+        :type id_: str
+        """
         self.send({
             'headers': {
                 'path': 'rooms/join',
@@ -179,6 +201,15 @@ class FrostClient(BaseClient):
         token: str,
         id_: str
     ) -> None:
+        """Leave a joined room in a server.
+
+        :param room_id: The ID of the room to leave
+        :type room_id: int
+        :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
+        :type token: str
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
+        :type id_: str
+        """
         self.send({
             'headers': {
                 'path': 'rooms/leave',
@@ -195,6 +226,15 @@ class FrostClient(BaseClient):
         token: str,
         id_: str
     ) -> None:
+        """Get the invite code of a room in a server.
+
+        :param room_id: The ID of the room to get an invite code from
+        :type room_id: int
+        :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
+        :type token: str
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
+        :type id_: str
+        """
         self.send({
             'headers': {
                 'path': 'rooms/get_invite_code',
@@ -210,6 +250,13 @@ class FrostClient(BaseClient):
         token: str,
         id_: str
     ) -> None:
+        """Get all the joined rooms of the currently logged in user.
+
+        :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
+        :type token: str
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
+        :type id_: str
+        """
         self.send({
             'headers': {
                 'path': 'rooms/get_all_joined',
@@ -225,6 +272,15 @@ class FrostClient(BaseClient):
         token: str,
         id_: str
     ) -> None:
+        """Get all the members of a specific room.
+
+        :param room_id: The ID of the room to get the members of
+        :type room_id: int
+        :param token: The user's token, auto filled by :meth:`frost.client.auth.get_auth`
+        :type token: str
+        :param id_: The user's ID, auto filled by :meth:`frost.client.auth.get_auth`
+        :type id_: str
+        """
         self.send({
             'headers': {
                 'path': 'rooms/get_members',

@@ -1,7 +1,8 @@
 import json
 from typing import Any, Dict
 
-from frost.client.events.events import EventStatus, Memory, Messages
+from frost.client.events.events import EventStatus, Messages
+from frost.client.objects import Memory
 from frost.client.headers import Status
 from frost.ext import Cog
 
@@ -54,15 +55,33 @@ class Msgs(Cog, route='messages'):
         Messages.add_new_msgs(data['msg'])
 
     def post_room(data: Dict[str, Any]) -> None:
+        """Deals with the post response from requesting all messages in a specific room. \
+        Messages are stored in :class:`frost.client.events.events.Messages`.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
         EventStatus.get_room_msgs = data['headers']['status']
 
 
 class Rooms(Cog, route='rooms'):
+    """Deals with room within a server. :code:`route='rooms'`
+    """
 
     def post_create(data: Dict[str, Any]) -> None:
+        """Deals with the post response from a room creation request.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
         EventStatus.create_room = data['headers']['status']
 
     def post_join(data: Dict[str, Any]) -> None:
+        """Deals with the post response from a join room request.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
         status = data['headers']['status']
 
         if status == Status.SUCCESS.value:
@@ -71,6 +90,11 @@ class Rooms(Cog, route='rooms'):
         EventStatus.join_room = status
 
     def post_leave(data: Dict[str, Any]) -> None:
+        """Deals with the post response from a leave room request.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
         status = data['headers']['status']
 
         if status == Status.SUCCESS.value:
@@ -79,6 +103,11 @@ class Rooms(Cog, route='rooms'):
         EventStatus.leave_room = data['headers']['status']
 
     def post_invite_code(data: Dict[str, Any]) -> None:
+        """Deals with the post response from a room invite code request.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
         status = data['headers']['status']
 
         if status == Status.SUCCESS.value:
@@ -87,10 +116,20 @@ class Rooms(Cog, route='rooms'):
         EventStatus.get_invite_code = status
 
     def post_all_joined(data: Dict[str, Any]) -> None:
+        """Deals with the post response from a request for all joined rooms.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
         Memory.add_rooms(*data['rooms'])
         EventStatus.get_joined_rooms = data['headers']['status']
 
     def post_members(data: Dict[str, Any]) -> None:
+        """Deals with the post response from a request for all members in a room.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
         status = data['headers']['status']
 
         if status == Status.SUCCESS.value:
