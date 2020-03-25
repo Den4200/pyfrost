@@ -233,6 +233,7 @@ class Msgs(Cog, route='messages'):
 
         with managed_session() as session:
             room = session.query(Room).filter(Room.id == room_id).first()
+            user = session.query(User).filter(User.id == id_).first()
 
             if room is None:
                 kwargs['client_send']({
@@ -241,6 +242,18 @@ class Msgs(Cog, route='messages'):
                         'status': Status.ROOM_NOT_FOUND.value
                     }
                 })
+                return
+
+            if room not in user.joined_rooms:
+                kwargs['client_send']({
+                    'headers': {
+                        'path': 'messages/post_room',
+                        'status': Status.PERMISSION_DENIED.value
+                    }
+                })
+                logger.info(
+                    f'User "{user.username}" attempted to get messages from room "{room.name}"'
+                )
                 return
 
             msgs = room.messages
@@ -273,7 +286,6 @@ class Msgs(Cog, route='messages'):
                 'msg': msgs
             })
 
-            user = session.query(User).filter(User.id == id_).first()
             logger.info(
                 f'User "{user.username}" was sent {len(msgs)} messages from room "{room.name}"'
             )

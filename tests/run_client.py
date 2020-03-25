@@ -115,8 +115,8 @@ def run_client():
     # create_room(client, 'test room')
     # get_invite_code(client, 2)
 
-    # join_room(client, 'aff10152-6d4c-11ea-87fe-9cb6d0d6fdc2')
-    # print(Memory.rooms)
+    join_room(client, 'aff10152-6d4c-11ea-87fe-9cb6d0d6fdc2')
+    print(Memory.rooms)
 
     # client.send_msg(2, 'testing again')
 
@@ -128,12 +128,10 @@ def run_client():
 
     # time.sleep(5)
 
-    # leave_room(client, 2)
-    # print(Memory.rooms)
+    leave_room(client, 2)
+    print(Memory.rooms)
 
     # send_msg(client)
     # check_msgs()
 
     client.close()
-
-    # TODO: make sure only members of a room can get its messages
