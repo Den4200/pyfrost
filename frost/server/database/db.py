@@ -5,11 +5,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, Session  # NOQA: F401
 
 
-engine = create_engine('sqlite:///database.sqlite3', convert_unicode=True)
-"""The SQLAlchemy engine."""
+engine = create_engine('sqlite:///pyfrost.sqlite3', convert_unicode=True)
+"""The SQLAlchemy engine.
+"""
 
 Base = declarative_base()
-"""The base model."""
+"""The base model.
+"""
 
 
 @contextmanager
@@ -41,22 +43,22 @@ def managed_session() -> 'Session':
 
 
 def init_db() -> None:
-    """Initlializes a database and creates the pre-defined modules.
+    """Initlializes a database and creates the pre-defined models.
     """
     from werkzeug.security import generate_password_hash
     from frost.server.database import models  # NOQA: F401
     Base.metadata.create_all(bind=engine)
 
-    # This is here for now, until separate rooms are implemented.
+    # Creates the master user and the main room
     with managed_session() as session:
         session.add_all([
             models.User(
-                username='f1re',
-                password=generate_password_hash('pw')
+                username='master',
+                password=generate_password_hash('password')
             ),
             models.Room(
                 name='Main Room',
-                invite_code='abc123',
+                invite_code='main',
                 owner_id=1
             )
         ])

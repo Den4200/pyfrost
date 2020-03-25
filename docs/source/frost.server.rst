@@ -29,14 +29,6 @@ frost.server.cogs module
    :undoc-members:
    :show-inheritance:
 
-frost.server.exceptions module
-------------------------------
-
-.. automodule:: frost.server.exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 frost.server.headers module
 ---------------------------
 
@@ -53,10 +45,10 @@ frost.server.logger module
    :undoc-members:
    :show-inheritance:
 
-frost.server.room module
-------------------------
+frost.server.objects module
+---------------------------
 
-.. automodule:: frost.server.room
+.. automodule:: frost.server.objects
    :members:
    :undoc-members:
    :show-inheritance:
@@ -65,14 +57,6 @@ frost.server.server module
 --------------------------
 
 .. automodule:: frost.server.server
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-frost.server.user module
-------------------------
-
-.. automodule:: frost.server.user
    :members:
    :undoc-members:
    :show-inheritance:

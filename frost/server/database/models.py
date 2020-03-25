@@ -15,13 +15,13 @@ from frost.server.database.db import Base
 
 
 user_room_association = Table(
-    """An association from the many-to-many relationship \
-    between users and rooms.
-    """
     'user_room_association', Base.metadata,
     Column('users', Integer, ForeignKey('users.id')),
     Column('rooms', Integer, ForeignKey('rooms.id'))
 )
+"""An association from the many-to-many relationship \
+between users and rooms.
+"""
 
 
 class User(Base):
@@ -42,19 +42,19 @@ class User(Base):
     """The user's authentication token, used after login.
     """
     joined_rooms = relationship(
-        """The different rooms the user has joined.
-        """
         'Room',
         secondary=user_room_association,
         back_populates='users'
     )
+    """The different rooms the user has joined.
+    """
 
     messages = relationship(
-        """The messages the user has sent.
-        """
         'Message',
         back_populates='user'
     )
+    """The messages the user has sent.
+    """
 
     def __repr__(self) -> str:
         return f"<User id={self.id} username='{self.username}'>"
@@ -79,19 +79,19 @@ class Room(Base):
     """
 
     users = relationship(
-        """The users who are have joined the room.
-        """
         'User',
         secondary=user_room_association,
         back_populates='joined_rooms'
     )
+    """The users who are have joined the room.
+    """
 
     messages = relationship(
-        """The messages that have been sent in the room.
-        """
         'Message',
         back_populates='room'
     )
+    """The messages that have been sent in the room.
+    """
 
     def __repr__(self) -> str:
         return f"<Room name='{self.name}'>"
@@ -120,18 +120,18 @@ class Message(Base):
     """
 
     user = relationship(
-        """The user who sent the message.
-        """
         'User',
         back_populates='messages'
     )
+    """The user who sent the message.
+    """
 
     room = relationship(
-        """The room the message was sent in.
-        """
         'Room',
         back_populates='messages'
     )
+    """The room the message was sent in.
+    """
 
     def __repr__(self) -> str:
         return (

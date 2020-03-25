@@ -1,73 +1,83 @@
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 
 class Messages:
-    """All messages will be stored in an instance of this class.
+    """All messages will be stored in this class.
+    """
+    all = dict()
+    """All messages stored.
+    """
+    __new = dict()
+    """New, unread messages.
     """
 
-    def __init__(self) -> None:
-        """The constructor method.
-        """
-        self.all_messages = dict()
-        self._new_messages = dict()
-
-    def get_new_msgs(self) -> Dict[str, Dict[str, Union[str, Dict[str, str]]]]:
-        """Returns new messages saved and moves them over to :code:`all_messages`.
+    @classmethod
+    def get_new_msgs(cls) -> Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]:
+        """Returns new, unread messages.
 
         :return: The new messages
-        :rtype: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+        :rtype: Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]
         """
-        self.all_messages.update(self._new_messages)
         try:
-            return self._new_messages
+            return cls.__new
         finally:
-            self._new_messages = dict()
+            cls.__new = dict()
 
-    def add_new_msgs(self, msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]) -> None:
-        """Save new messages.
+    @classmethod
+    def add_new_msgs(
+        cls, msgs: Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]
+    ) -> None:
+        """Save new messages, grouped by room.
 
         :param msgs: The messages to save
-        :type msgs: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+        :type msgs: Dict[int, Dict[str, Dict[str, Union[str, Dict[str, str]]]]]
         """
-        self._new_messages.update(msgs)
+        for msg_id, msg in msgs.items():
 
-    def clear(self) -> None:
-        """Clears :code:`all_messages` and :code:`_new_messages`.
+            if msg['room']['id'] in cls.__new:
+                cls.__new[msg['room']['id']].update({msg_id: msg})
+            else:
+                cls.__new[msg['room']['id']] = {msg_id: msg}
+
+            if msg['room']['id'] in cls.all:
+                cls.all[msg['room']['id']].update({msg_id: msg})
+            else:
+                cls.all[msg['room']['id']] = {msg_id: msg}
+
+    @classmethod
+    def clear(cls) -> None:
+        """Clears :code:`cls.all` and :code:`cls.__new`.
         """
-        self.all_messages = dict()
-        self._new_messages = dict()
+        cls.all = dict()
+        cls.__new = dict()
 
 
-class AuthStatus:
-    """Stores the current authentication status.
+class EventStatus:
+    """Stores the current status of all events.
     """
+    login = None
+    register = None
 
-    def __init__(self) -> None:
-        """The constructor method.
+    join_room = None
+    leave_room = None
+    create_room = None
+
+    send_msg = None
+    get_room_msgs = None
+    get_invite_code = None
+    get_room_members = None
+    get_joined_rooms = None
+
+    @classmethod
+    def get_status(cls, item: str) -> Optional[int]:
+        """Returns the current status of the specified item \
+        and resets it to :code:`None` after.
+
+        :return: The current event status
+        :rtype: Optional[int]
         """
-        self.current_status = None
-
-    def get_status(self) -> int:
-        """Returns the current status and resets it after.
-
-        :return: The current authentication status
-        :rtype: int
-        """
-        if self.current_status is not None:
+        if hasattr(cls, item) and getattr(cls, item) is not None:
             try:
-                return self.current_status
+                return getattr(cls, item)
             finally:
-                self.current_status = None
-
-
-messages = Messages()
-"""An instance of :class:`frost.client.events.events.Messages`.
-"""
-
-login_status = AuthStatus()
-"""An instance of :class:`frost.client.events.events.AuthStatus` for login status.
-"""
-
-register_status = AuthStatus()
-"""An instance of :class:`frost.client.events.events.AuthStatus` for registration status.
-"""
+                setattr(cls, item, None)

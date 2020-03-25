@@ -1,14 +1,10 @@
-from frost.client.events.cogs import Auth, Msgs
-from frost.client.events.events import (
-    messages,
-    login_status,
-    register_status
-)
+from frost.client.events.cogs import Auth, Msgs, Rooms
+from frost.client.events.events import EventStatus, Messages
 
 __all__ = (
     'Auth',
     'Msgs',
-    'messages',
-    'login_status',
-    'register_status'
+    'Rooms',
+    'Messages',
+    'EventStatus'
 )
