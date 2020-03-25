@@ -36,6 +36,14 @@ frost.client.headers module
    :undoc-members:
    :show-inheritance:
 
+frost.client.objects module
+---------------------------
+
+.. automodule:: frost.client.objects
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------
