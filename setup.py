@@ -27,7 +27,7 @@ setuptools.setup(
         'lazy-object-proxy==1.4.3',
         'mccabe==0.6.1',
         'six==1.14.0',
-        'SQLAlchemy==1.3.13',
+        'SQLAlchemy==1.3.15',
         'typed-ast==1.4.1',
         'Werkzeug==1.0.0',
         'wrapt==1.11.2'
