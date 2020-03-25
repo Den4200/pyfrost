@@ -357,6 +357,7 @@ class Rooms(Cog, route='rooms'):
         :type id_: str
         """
         code = data['invite_code']
+        send = kwargs['send']
 
         with managed_session() as session:
             room = session.query(Room).filter(Room.invite_code == code).first()
@@ -385,6 +386,21 @@ class Rooms(Cog, route='rooms'):
             })
             logger.info(f'User "{user.username}" joined room "{room.name}"')
 
+            for member in room.users:
+                room_user = Memory.logged_in_users.get(member.id)
+
+                if room_user is not None:
+                    send(room_user.conn, {
+                        'headers': {
+                            'path': 'rooms/new_room_member'
+                        },
+                        'room_id': room.id,
+                        'user': {
+                            'id': user.id,
+                            'username': user.username
+                        }
+                    })
+
     @auth_required
     def leave(
         data: Dict[str, Any],
@@ -402,6 +418,7 @@ class Rooms(Cog, route='rooms'):
         :type id_: str
         """
         room_id = data['room_id']
+        send = kwargs['send']
 
         with managed_session() as session:
             room = session.query(Room).filter(Room.id == room_id).first()
@@ -419,13 +436,25 @@ class Rooms(Cog, route='rooms'):
             user.joined_rooms.remove(room)
             logger.info(f'User "{user.username}" left room "{room.name}"')
 
-        kwargs['client_send']({
-            'headers': {
-                'path': 'rooms/post_leave',
-                'status': Status.SUCCESS.value
-            },
-            'room_id': room_id
-        })
+            kwargs['client_send']({
+                'headers': {
+                    'path': 'rooms/post_leave',
+                    'status': Status.SUCCESS.value
+                },
+                'room_id': room_id
+            })
+
+            for member in room.users:
+                room_user = Memory.logged_in_users.get(member.id)
+
+                if room_user is not None:
+                    send(room_user.conn, {
+                        'headers': {
+                            'path': 'rooms/remove_room_member'
+                        },
+                        'room_id': room.id,
+                        'user_id': user.id
+                    })
 
     @auth_required
     def get_invite_code(

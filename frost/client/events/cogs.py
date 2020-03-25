@@ -144,3 +144,19 @@ class Rooms(Cog, route='rooms'):
             Memory.add_room_members(data['room_id'], *data['members'])
 
         EventStatus.get_room_members = status
+
+    def new_room_member(data: Dict[str, Any]) -> None:
+        """Adds a member to a specific room when they join.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
+        Memory.add_room_members(data['room_id'], data['user'])
+
+    def remove_room_member(data: Dict[str, Any]) -> None:
+        """Removes a member from a specific room when they leave.
+
+        :param data: Data received from the server
+        :type data: Dict[str, Any]
+        """
+        Memory.remove_room_member(data['room_id'], data['user_id'])

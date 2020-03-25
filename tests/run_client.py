@@ -1,8 +1,9 @@
 import time
 
 from frost import FrostClient
+from frost.client.objects import Memory
 from frost.client import Status, threaded
-from frost.client.events import Messages, EventStatus, Memory
+from frost.client.events import Messages, EventStatus
 
 
 @threaded(daemon=True)
@@ -11,7 +12,12 @@ def check_msgs() -> None:
         msgs = Messages.get_new_msgs()
 
         if msgs:
-            print(Messages.all)
+            print(msgs)
+
+        member_changes = Memory.get_room_member_changes()
+
+        if member_changes['left'] or member_changes['joined']:
+            print(member_changes)
 
         time.sleep(0.25)
 
@@ -20,7 +26,7 @@ def check_msgs() -> None:
 def send_msg(client: 'FrostClient'):
     while True:
         msg = input()
-        client.send_msg(1, msg)
+        client.send_msg(2, msg)
 
 
 def get_status(name):
@@ -109,8 +115,8 @@ def run_client():
     # create_room(client, 'test room')
     # get_invite_code(client, 2)
 
-    join_room(client, 'ace99810-6d80-11ea-9c2c-48a472645032')
-    print(Memory.rooms)
+    # join_room(client, 'aff10152-6d4c-11ea-87fe-9cb6d0d6fdc2')
+    # print(Memory.rooms)
 
     # client.send_msg(2, 'testing again')
 
@@ -118,12 +124,16 @@ def run_client():
     time.sleep(0.25)
     print(Messages.all[2])
 
-    get_room_members(client, 2)
+    # get_room_members(client, 2)
 
-    leave_room(client, 2)
-    print(Memory.rooms)
+    # time.sleep(5)
+
+    # leave_room(client, 2)
+    # print(Memory.rooms)
 
     # send_msg(client)
     # check_msgs()
 
     client.close()
+
+    # TODO: make sure only members of a room can get its messages

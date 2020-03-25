@@ -48,7 +48,7 @@ class FrostServer(BaseServer):
 
         self.func = self.on_user_connect
 
-        db = Path('database.sqlite3')
+        db = Path('pyfrost.sqlite3')
         if not db.exists():
             from frost.server.database import init_db
             init_db()
