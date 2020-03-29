@@ -155,6 +155,7 @@ class Msgs(Cog, route='messages'):
                     room_id=room_id
                 )
                 session.add(msg)
+                session.flush()
 
                 contents = {
                     'headers': {
@@ -171,7 +172,7 @@ class Msgs(Cog, route='messages'):
                                 'username': user.username,
                                 'id': user.id
                             },
-                            'timestamp': msg.timestamp
+                            'timestamp': str(msg.timestamp)
                         }
                     }
                 }
