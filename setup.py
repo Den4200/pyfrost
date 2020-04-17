@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name="pyfrost",
-    version="0.2.0",
+    version="0.2.1",
     author="Dennis Pham",
     author_email="dpham.42@hotmail.com",
     description="An online chat library for creating the client and server.",
